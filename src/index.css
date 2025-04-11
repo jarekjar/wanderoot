@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Press Start 2P', cursive;
+  -webkit-font-smoothing: none;
+  image-rendering: pixelated;
+}
+
+* {
+  box-sizing: border-box;
+} 
