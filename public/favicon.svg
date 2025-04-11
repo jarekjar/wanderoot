@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="32" height="32" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
   <!-- Background -->
-  <rect width="32" height="32" fill="#8B4513"/>
+  <rect width="32" height="32" rx="4" fill="#2A1810"/>
   
-  <!-- House shape -->
-  <path d="M16 4L4 16H8V28H24V16H28L16 4Z" fill="#654321"/>
+  <!-- Border -->
+  <rect x="2" y="2" width="28" height="28" rx="3" fill="#8B4513"/>
+  <rect x="4" y="4" width="24" height="24" rx="2" fill="#C17F59"/>
   
-  <!-- React logo hint (simplified atom) -->
-  <circle cx="16" cy="16" r="3" fill="#61DAFB"/>
-  <ellipse cx="16" cy="16" rx="8" ry="3" stroke="#61DAFB" stroke-width="2" fill="none" transform="rotate(60 16 16)"/>
-  <ellipse cx="16" cy="16" rx="8" ry="3" stroke="#61DAFB" stroke-width="2" fill="none" transform="rotate(-60 16 16)"/>
+  <!-- W - Wider and Centered -->
+  <path d="M8 8h3v12h3v-6h4v6h3v-12h3v14h-4v2h-8v-2h-4z" fill="#FFFFFF"/>
+  
+  <!-- Inner Shadow -->
+  <rect x="4" y="4" width="24" height="24" rx="2" fill="rgba(0,0,0,0.1)"/>
 </svg> 
