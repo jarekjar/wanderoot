@@ -18,4 +18,7 @@
 - Unified button styling across main menu and settings
 - Fixed sound toggle button positioning and appearance
 - Added brightness filter to sound emoji for better visibility
-- Improved button press animation with inset shadows 
+- Improved button press animation with inset shadows
+- Made UI mobile responsive with proper text sizing and spacing
+- Fixed title sizing on main menu and settings screens
+- Improved settings screen layout with better spacing between labels and controls 

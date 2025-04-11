@@ -3,6 +3,97 @@
   font-family: 'Press Start 2P', cursive;
 }
 
+/* Theme-based components */
+.menu-button-bg {
+  background-color: var(--theme-primary);
+  position: relative;
+  transition: all 0.075s;
+}
+
+.menu-button-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: inherit;
+  transition: background-color 0.075s;
+}
+
+.menu-button-bg:hover::before {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.menu-button-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset -2px -2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.menu-button-bg:active::after {
+  box-shadow: inset 2px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.menu-button-bg:active {
+  transform: translateY(1px);
+}
+
+.sound-button-bg {
+  background-color: var(--theme-secondary);
+  border: 4px solid var(--theme-border);
+  transition: all 0.075s;
+  outline: none;
+}
+
+.sound-button-bg:hover {
+  filter: brightness(1.2);
+}
+
+.sound-button-bg:active {
+  transform: translateY(1px);
+}
+
+.sound-button-bg:focus {
+  outline: none;
+}
+
+.settings-container-bg {
+  background-color: var(--theme-primary);
+  border-color: var(--theme-border);
+}
+
+.settings-row-bg {
+  background-color: var(--theme-border);
+}
+
+.settings-select-bg {
+  background-color: var(--theme-primary);
+  border-color: var(--theme-border);
+}
+
+.settings-select-bg:hover {
+  background-color: var(--theme-secondary);
+}
+
+.settings-slider-bg {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.settings-slider-fill {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Title shadow */
+.title-shadow {
+  text-shadow: 4px 4px 0px var(--theme-shadow);
+}
+
+/* Version text shadow */
+.version-shadow {
+  text-shadow: 2px 2px 0px var(--theme-shadow);
+}
+
 /* Pixel UI Components */
 .pixel-menu {
   background: rgba(0, 0, 0, 0.8);
@@ -111,4 +202,93 @@
 
 .pixel-bounce {
   animation: pixel-bounce 1s infinite;
+}
+
+/* Menu Slide Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.slide-out-left {
+  animation: slideOutLeft 0.3s ease-out forwards;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.slide-out-right {
+  animation: slideOutRight 0.3s ease-out forwards;
+}
+
+.menu-container {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  background: none;
+}
+
+.menu-content-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: none;
 } 

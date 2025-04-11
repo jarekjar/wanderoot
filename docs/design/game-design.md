@@ -1,8 +1,8 @@
-# ReactFarm Game Design Document
+# Wanderoot Game Design Document
 
 ## Overview
 
-ReactFarm is a farming simulation game inspired by Stardew Valley, built using modern web technologies. The game combines farming mechanics with RPG elements to create an engaging player experience.
+Wanderoot is a farming simulation game inspired by Stardew Valley, built using modern web technologies. The game combines farming mechanics with RPG elements to create an engaging player experience.
 
 ## Core Game Mechanics
 

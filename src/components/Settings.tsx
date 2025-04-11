@@ -66,30 +66,8 @@ export const Settings = () => {
     dispatch(setUITheme(newTheme));
   };
 
-  const buttonClass = `
-    group
-    bg-[#db6616]
-    w-[200px] h-[52px]
-    rounded-lg
-    text-white
-    font-['Press_Start_2P'] text-lg
-    relative
-    before:absolute before:inset-0
-    before:bg-black/10
-    before:rounded-lg
-    before:transition-opacity
-    hover:before:bg-black/20
-    after:absolute after:inset-0
-    after:shadow-[inset_-2px_-2px_2px_rgba(0,0,0,0.3)]
-    after:rounded-lg
-    active:after:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.3)]
-    active:translate-y-[1px]
-    transition-all duration-75
-    flex items-center justify-center
-  `.replace(/\s+/g, ' ').trim();
-
   const settingRowClass = `
-    bg-[#b54e0f]
+    settings-row-bg
     box-border
     w-full h-[52px]
     rounded-lg
@@ -98,65 +76,63 @@ export const Settings = () => {
   `.replace(/\s+/g, ' ').trim();
 
   const selectClass = `
-    bg-[#db6616]
+    settings-select-bg
     text-white 
     font-['Press_Start_2P'] 
-    text-sm 
-    px-3 py-2 pr-7 
+    text-xs sm:text-sm
+    px-2 sm:px-3 py-2 pr-6 sm:pr-7
     rounded-lg 
     border-2 
-    border-[#b54e0f]
-    min-w-[120px] 
+    min-w-[100px] sm:min-w-[120px]
     w-fit 
     appearance-none 
     cursor-pointer
-    hover:bg-[#c45c13]
+    [&>option]:cursor-pointer
   `.replace(/\s+/g, ' ').trim();
 
   return (
-    <div className="fixed inset-0 main-menu-bg">
-      <div className="relative z-10 flex flex-col items-center justify-center h-full">
-        {/* Title */}
-        <div className="mb-12">
-          <h1 
-            className="text-6xl font-['Press_Start_2P'] text-white"
-            style={{ textShadow: '4px 4px 0px #8f3e0c' }}
-          >
-            Settings
-          </h1>
-        </div>
+    <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
+      {/* Title */}
+      <div className="mb-8 sm:mb-12">
+        <h1 
+          className="text-4xl sm:text-5xl font-['Press_Start_2P'] text-white title-shadow"
+        >
+          Settings
+        </h1>
+      </div>
 
-        {/* Settings Container */}
-        <div className="bg-[#db6616] p-6 rounded-lg border-4 border-[#b54e0f] shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-[500px]">
-          <div className="flex flex-col gap-4 mb-8">
-            {/* Sound Toggle */}
-            <div className={settingRowClass}>
-              <span className="text-sm font-['Press_Start_2P'] text-white">
-                Sound
+      {/* Settings Container */}
+      <div className="settings-container-bg p-4 sm:p-6 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-full max-w-[500px]">
+        <div className="flex flex-col gap-4 mb-8">
+          {/* Sound Toggle */}
+          <div className={settingRowClass}>
+            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
+              Sound
+            </span>
+            <button
+              onClick={() => {
+                playClickSound(soundEnabled);
+                dispatch(setSoundEnabled(!soundEnabled));
+              }}
+              className="text-xl sm:text-2xl cursor-pointer hover:opacity-80 transition-opacity mb-[6px]"
+            >
+              <span className="brightness-[1.2] contrast-[1.1]">
+                {soundEnabled ? '🔊' : '🔇'}
               </span>
-              <button
-                onClick={() => {
-                  playClickSound(soundEnabled);
-                  dispatch(setSoundEnabled(!soundEnabled));
-                }}
-                className="text-2xl cursor-pointer hover:opacity-80 transition-opacity mb-[6px]"
-              >
-                <span className="brightness-[1.2] contrast-[1.1]">
-                  {soundEnabled ? '🔊' : '🔇'}
-                </span>
-              </button>
-            </div>
+            </button>
+          </div>
 
-            {/* Music Volume */}
-            <div className={settingRowClass}>
-              <span className="text-sm font-['Press_Start_2P'] text-white">
+          {/* Music Volume */}
+          <div className={settingRowClass}>
+            <div className="flex items-center gap-8">
+              <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white whitespace-nowrap">
                 Music Volume
               </span>
               <div className="flex items-center gap-4">
-                <div className="relative w-[160px] flex items-center">
-                  <div className="absolute w-full h-[24px] bg-[#db6616] rounded-lg pointer-events-none">
+                <div className="relative w-[120px] sm:w-[160px] flex items-center">
+                  <div className="absolute w-full h-[24px] settings-slider-bg rounded-lg pointer-events-none border-2 border-[var(--theme-border)] overflow-hidden">
                     <div 
-                      className="h-full bg-[#8f3e0c] rounded-lg transition-all duration-75 pointer-events-none"
+                      className="h-full settings-slider-fill rounded-none transition-all duration-75 pointer-events-none"
                       style={{ width: `${Math.round(localVolume * 100)}%` }}
                     />
                   </div>
@@ -195,68 +171,65 @@ export const Settings = () => {
                     `}
                   />
                 </div>
-                <span className="text-sm font-['Press_Start_2P'] text-white w-[48px]">
+                <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white w-[40px] sm:w-[48px]">
                   {Math.round(localVolume * 100)}%
                 </span>
               </div>
             </div>
+          </div>
 
-            {/* Screen Mode */}
-            <div className={settingRowClass}>
-              <span className="text-sm font-['Press_Start_2P'] text-white">
-                Screen Mode
-              </span>
-              <div className="relative">
-                <select 
-                  className={selectClass}
-                  value={screenMode}
-                  onChange={handleScreenModeChange}
-                >
-                  <option value="windowed">Windowed</option>
-                  <option value="fullscreen">Fullscreen</option>
-                </select>
-                <span className="absolute right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[10px]">▼</span>
-              </div>
-            </div>
-
-            {/* UI Theme */}
-            <div className={settingRowClass}>
-              <span className="text-sm font-['Press_Start_2P'] text-white">
-                UI Theme
-              </span>
-              <div className="relative">
-                <select 
-                  className={selectClass}
-                  value={uiTheme}
-                  onChange={handleThemeChange}
-                >
-                  <option value="orange">Orange</option>
-                  <option value="brown">Brown</option>
-                  <option value="grey">Grey</option>
-                  <option value="yellow">Yellow</option>
-                </select>
-                <span className="absolute right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[10px]">▼</span>
-              </div>
+          {/* Screen Mode */}
+          <div className={settingRowClass}>
+            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
+              Screen Mode
+            </span>
+            <div className="relative cursor-pointer">
+              <select 
+                className={selectClass}
+                value={screenMode}
+                onChange={handleScreenModeChange}
+                style={{ cursor: 'pointer' }}
+              >
+                <option value="windowed" style={{ cursor: 'pointer' }}>Windowed</option>
+                <option value="fullscreen" style={{ cursor: 'pointer' }}>Fullscreen</option>
+              </select>
+              <span className="absolute right-2 sm:right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[8px] sm:text-[10px]">▼</span>
             </div>
           </div>
 
+          {/* UI Theme */}
+          <div className={settingRowClass}>
+            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
+              UI Theme
+            </span>
+            <div className="relative cursor-pointer">
+              <select 
+                className={selectClass}
+                value={uiTheme}
+                onChange={handleThemeChange}
+                style={{ cursor: 'pointer' }}
+              >
+                <option value="orange" style={{ cursor: 'pointer' }}>Orange</option>
+                <option value="brown" style={{ cursor: 'pointer' }}>Brown</option>
+                <option value="grey" style={{ cursor: 'pointer' }}>Grey</option>
+                <option value="yellow" style={{ cursor: 'pointer' }}>Yellow</option>
+              </select>
+              <span className="absolute right-2 sm:right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[8px] sm:text-[10px]">▼</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Back Button */}
+        <div className="flex justify-center">
           <button
             onClick={() => {
               playClickSound(soundEnabled);
               dispatch(setActiveMenu('main'));
             }}
-            className={buttonClass}
+            className="group menu-button-bg w-[160px] sm:w-[200px] h-[48px] sm:h-[52px] rounded-lg text-white font-['Press_Start_2P'] text-base sm:text-lg relative flex items-center justify-center transition-all duration-75"
           >
             <span className="text-white brightness-[1.2]">Back</span>
           </button>
-        </div>
-
-        {/* Version */}
-        <div 
-          className="absolute bottom-4 left-4 font-['Press_Start_2P'] text-[#F5E6D3] text-sm"
-          style={{ textShadow: '2px 2px 0px #8f3e0c' }}
-        >
-          v0.0.1
         </div>
       </div>
     </div>
