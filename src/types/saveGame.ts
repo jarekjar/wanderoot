@@ -28,7 +28,7 @@ export const createNewSave = (
   playerPet: string = 'cat'
 ): SaveGame => {
   return {
-    version,
+    version: CURRENT_SAVE_VERSION,
     playerName,
     playerSprite,
     playerClass,
