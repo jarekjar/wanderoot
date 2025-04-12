@@ -30,7 +30,7 @@
       "createStartMenuShortcut": true,
       "shortcutName": "Wanderoot",
       "artifactName": "${productName}-Setup-${version}.${ext}",
-      "deleteAppDataOnUninstall": true,
+      "deleteAppDataOnUninstall": true
     },
     "files": [
       "dist/**/*",
