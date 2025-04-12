@@ -8,7 +8,7 @@
   },
   "description": "A Wanderoot Game",
   "main": "electron/main.cjs",
-  "homepage": "./",
+  "homepage": "wanderoot.net",
   "build": {
     "appId": "com.wanderoot.app",
     "productName": "Wanderoot",
