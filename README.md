@@ -4,6 +4,8 @@ A 2D RPG game built with React, Redux, and Electron.
 
 ![Wanderoot Main Menu](screenshots/main-menu.png)
 
+🎮 [Play Online](https://jarekjar.github.io/wanderoot/) | 📥 [Download Desktop Version](#-download--install)
+
 ## 📥 Download & Install
 
 ### Windows
@@ -192,6 +194,17 @@ git push origin main --tags
    - Build the application
    - Create a GitHub release
    - Attach the portable executable
+   - Deploy to GitHub Pages
+
+## 🌐 Web Version
+
+The game is also available to play directly in your browser through GitHub Pages at:
+https://jarekjar.github.io/wanderoot/
+
+Note: The web version has some limitations compared to the desktop version:
+- No file system access for save games (uses browser localStorage instead)
+- Some features may be browser-dependent
+- Performance may vary based on your browser and device
 
 ## 🤝 Contributing
 
