@@ -2,33 +2,79 @@
 
 A 2D RPG game built with React, Redux, and Electron.
 
-## Current Status
+## 📥 Download & Install
 
-Wanderoot is currently in early development. Key features implemented:
+1. Go to the [Releases](https://github.com/YOUR_USERNAME/wanderoot/releases) page
+2. Find the latest version
+3. Download `Wanderoot-Setup-x.x.x.exe`
+4. Run the installer
+5. Launch Wanderoot from your Start Menu or Desktop shortcut
 
-- Character creation with multiple classes
-- Basic movement and collision detection
-- Dialogue system
-- Menu system
-- Save/Load game functionality
-- Basic combat mechanics
+## ✨ Features
 
-## Development
+- Character creation with multiple classes (Knight, Ranger, Mage)
+- Dynamic dialogue system with text animations
+- Save/Load game functionality with multiple save slots
+- In-game menu system with settings
+- Configurable audio settings (music volume, sound effects)
+- Pause functionality
+- Beautiful pixel art graphics
+- Original soundtrack
 
-To run the development version:
+## 🚀 Development
+
+### Prerequisites
+
+- Node.js (v20 or higher)
+- npm (included with Node.js)
+
+### Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/wanderoot.git
+cd wanderoot
+
+# Install dependencies
 npm install
+
+# Start development server
 npm run electron-dev
 ```
 
-To build the installer:
+### Building
 
 ```bash
+# Create Windows installer
 npm run electron-pack
 ```
 
-## License
+### Project Structure
+
+```
+wanderoot/
+├── src/               # Source code
+│   ├── assets/       # Game assets (sprites, audio)
+│   ├── components/   # React components
+│   ├── state/        # Redux store and slices
+│   ├── styles/       # CSS styles
+│   ├── theme/        # Theme configuration
+│   ├── types/        # TypeScript type definitions
+│   └── utils/        # Utility functions
+├── electron/         # Electron main process
+└── public/          # Static assets
+```
+
+## 🛠️ Built With
+
+- React - UI framework
+- Redux - State management
+- Electron - Desktop application framework
+- TypeScript - Type safety
+- Tailwind CSS - Styling
+- Vite - Build tool
+
+## 📝 License
 
 MIT
 
