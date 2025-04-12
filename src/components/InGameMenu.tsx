@@ -17,6 +17,11 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
   const theme = useTheme();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
 
+  const handleButtonClick = (action: () => void) => {
+    playClickSound(soundEnabled);
+    action();
+  };
+
   const menuButtonClass = `
     menu-button-bg
     w-full
@@ -34,9 +39,11 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={() => {
-        playClickSound(soundEnabled);
-        onClose();
+      onClick={(e) => {
+        // Only trigger if clicking the backdrop directly
+        if (e.target === e.currentTarget) {
+          handleButtonClick(onClose);
+        }
       }}
     >
       <div 
@@ -65,10 +72,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
         >
           <div className="flex flex-col gap-4">
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onClose();
-              }}
+              onClick={() => handleButtonClick(onClose)}
               className={menuButtonClass}
               style={{
                 borderColor: theme.border,
@@ -79,10 +83,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onSettings();
-              }}
+              onClick={() => handleButtonClick(onSettings)}
               className={menuButtonClass}
               style={{
                 borderColor: theme.border,
@@ -93,10 +94,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onSave();
-              }}
+              onClick={() => handleButtonClick(onSave)}
               className={menuButtonClass}
               style={{
                 borderColor: theme.border,
@@ -107,10 +105,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onLoad();
-              }}
+              onClick={() => handleButtonClick(onLoad)}
               className={menuButtonClass}
               style={{
                 borderColor: theme.border,
@@ -121,10 +116,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onExit();
-              }}
+              onClick={() => handleButtonClick(onExit)}
               className={menuButtonClass}
               style={{
                 borderColor: theme.border,

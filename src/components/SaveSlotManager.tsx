@@ -25,6 +25,7 @@ export function SaveSlotManager({
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const [saveSlots, setSaveSlots] = useState<{ [key: number]: SaveGame | null }>({});
   const [loading, setLoading] = useState(true);
+  const [confirmSlot, setConfirmSlot] = useState<number | null>(null);
 
   useEffect(() => {
     const loadSaves = async () => {
@@ -43,9 +44,26 @@ export function SaveSlotManager({
 
   const handleSlotClick = (slotId: number) => {
     playClickSound(soundEnabled);
-    if (onSelectSlot) {
+    const saveData = saveSlots[slotId];
+    
+    if (mode === 'save' && saveData) {
+      setConfirmSlot(slotId);
+    } else if (onSelectSlot) {
       onSelectSlot(slotId);
     }
+  };
+
+  const handleConfirm = () => {
+    playClickSound(soundEnabled);
+    if (confirmSlot !== null && onSelectSlot) {
+      onSelectSlot(confirmSlot);
+    }
+    setConfirmSlot(null);
+  };
+
+  const handleCancel = () => {
+    playClickSound(soundEnabled);
+    setConfirmSlot(null);
   };
 
   const formatDate = (dateString: string) => {
@@ -116,7 +134,14 @@ export function SaveSlotManager({
                     )}
                   </div>
                   {mode === 'save' && !isEmpty && (
-                    <span className="text-xs text-white/50">Click to overwrite</span>
+                    <div className="flex flex-col items-end justify-center h-full">
+                      <span className="text-xs text-white/70 font-['Press_Start_2P']">
+                        Click to
+                      </span>
+                      <span className="text-xs text-white/70 font-['Press_Start_2P']">
+                        overwrite
+                      </span>
+                    </div>
                   )}
                 </button>
               );
@@ -138,6 +163,54 @@ export function SaveSlotManager({
         >
           <span className="text-white brightness-[1.2]">Back</span>
         </button>
+
+        {/* Confirmation Modal */}
+        {confirmSlot !== null && (
+          <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[60]">
+            <div 
+              className="p-6 rounded-lg border-4 shadow-lg max-w-[400px] w-full mx-4 menu-slide-up"
+              style={{
+                borderColor: theme.border,
+                background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+              }}
+            >
+              <div className="text-center mb-6">
+                <h2 className="text-xl font-['Press_Start_2P'] text-white mb-4">
+                  Warning!
+                </h2>
+                <p className="text-sm font-['Press_Start_2P'] text-white/80 mb-2">
+                  Are you sure you want to overwrite this save?
+                </p>
+                <p className="text-xs font-['Press_Start_2P'] text-white/60">
+                  This action cannot be undone.
+                </p>
+              </div>
+              
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={handleCancel}
+                  className="menu-button-bg w-[120px] h-[40px] rounded-lg text-white font-['Press_Start_2P'] text-sm relative flex items-center justify-center hover:brightness-110 transition-all duration-75"
+                  style={{
+                    borderColor: theme.border,
+                    background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+                  }}
+                >
+                  <span className="text-white brightness-[1.2]">Cancel</span>
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  className="menu-button-bg w-[120px] h-[40px] rounded-lg text-white font-['Press_Start_2P'] text-sm relative flex items-center justify-center hover:brightness-110 transition-all duration-75"
+                  style={{
+                    borderColor: theme.border,
+                    background: `linear-gradient(180deg, #c62828 0%, #b71c1c 100%)`
+                  }}
+                >
+                  <span className="text-white brightness-[1.2]">Confirm</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
