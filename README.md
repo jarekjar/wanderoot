@@ -6,11 +6,23 @@ A 2D RPG game built with React, Redux, and Electron.
 
 ## 📥 Download & Install
 
+### Windows
 1. Go to the [Releases](https://github.com/jarekjar/wanderoot/releases) page
 2. Find the latest version
 3. Download `Wanderoot-Setup-x.x.x.exe`
 4. Run the installer
 5. Launch Wanderoot from your Start Menu or Desktop shortcut
+
+### macOS
+1. Go to the [Releases](https://github.com/jarekjar/wanderoot/releases) page
+2. Find the latest version
+3. Download the appropriate version for your Mac:
+   - For Macs with Apple Silicon (2020 or later): Download `Wanderoot-x.x.x-arm64.dmg` for best performance
+   - For Intel-based Macs (pre-2020): Download `Wanderoot-x.x.x-x64.dmg`
+   - Not sure? Click Apple menu () > About This Mac. Look for "Chip" or "Processor"
+4. Double-click the downloaded .dmg file
+5. Drag Wanderoot to your Applications folder
+6. Launch from Applications
 
 ## ✨ Features
 
@@ -48,6 +60,12 @@ npm run electron-dev
 
 ```bash
 # Create Windows installer
+npm run pack:win
+
+# Create macOS installer
+npm run pack:mac
+
+# Create both Windows and macOS installers
 npm run electron-pack
 ```
 

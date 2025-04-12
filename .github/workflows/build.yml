@@ -28,7 +28,7 @@ jobs:
 
       - name: Build and package app
         run: |
-          npm run electron-pack
+          npm run electron-pack:win
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
