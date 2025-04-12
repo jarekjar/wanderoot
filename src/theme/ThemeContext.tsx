@@ -1,25 +1,29 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
-import { getThemeColors } from './theme';
-import type { ThemeColors } from './theme';
+import { ThemeColors, themes } from './theme';
 
-const ThemeContext = createContext<ThemeColors | null>(null);
+const ThemeContext = createContext<ThemeColors>(themes.default);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface ThemeProviderProps {
+  children: React.ReactNode;
+}
+
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const uiTheme = useSelector((state: RootState) => state.settings.uiTheme);
-  const themeColors = getThemeColors(uiTheme);
+  const theme = themes[uiTheme];
 
-  useEffect(() => {
+  React.useEffect(() => {
     // Set CSS variables
-    document.documentElement.style.setProperty('--theme-primary', themeColors.primary);
-    document.documentElement.style.setProperty('--theme-secondary', themeColors.secondary);
-    document.documentElement.style.setProperty('--theme-border', themeColors.border);
-    document.documentElement.style.setProperty('--theme-shadow', themeColors.shadow);
-  }, [themeColors]);
+    document.documentElement.style.setProperty('--theme-primary', theme.primary);
+    document.documentElement.style.setProperty('--theme-secondary', theme.secondary);
+    document.documentElement.style.setProperty('--theme-border', theme.border);
+    document.documentElement.style.setProperty('--theme-shadow', theme.shadow);
+    document.documentElement.style.setProperty('--theme-hover', theme.hover);
+  }, [theme]);
 
   return (
-    <ThemeContext.Provider value={themeColors}>
+    <ThemeContext.Provider value={theme}>
       {children}
     </ThemeContext.Provider>
   );

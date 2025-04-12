@@ -1,119 +1,110 @@
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../state/store';
-import { setActiveMenu } from '../state/uiState';
 import { setSoundEnabled } from '../state/settingsState';
 import { playClickSound } from '../utils/audio';
+import { useTheme } from '../theme/ThemeContext';
 import '../styles/background.css';
+import '../styles/menu.css';
 
-export const MainMenu = () => {
+interface MainMenuProps {
+  onNewGame: () => void;
+  onLoadGame: () => void;
+  onSettings: () => void;
+}
+
+function MainMenu({ onNewGame, onLoadGame, onSettings }: MainMenuProps) {
   const dispatch = useDispatch();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
-
-  const buttonClass = `
-    group
-    menu-button-bg
-    w-[200px] sm:w-[200px] w-[160px]
-    h-[52px] sm:h-[52px] h-[48px]
-    rounded-lg
-    text-white
-    font-['Press_Start_2P'] text-lg sm:text-lg text-base
-    relative
-    flex items-center justify-center
-    transition-all duration-75
-  `.replace(/\s+/g, ' ').trim();
-
-  const soundButtonClass = `
-    sound-button-bg
-    w-[48px] h-[48px]
-    rounded-lg
-    text-white
-    text-2xl
-    relative
-    before:absolute before:inset-0
-    before:bg-black/10
-    before:rounded-lg
-    before:transition-opacity
-    hover:before:bg-black/20
-    after:absolute after:inset-0
-    after:shadow-[inset_-2px_-2px_2px_rgba(0,0,0,0.3)]
-    after:rounded-lg
-    active:after:shadow-[inset_2px_2px_2px_rgba(0,0,0,0.3)]
-    active:translate-y-[1px]
-    transition-all duration-75
-    flex items-center justify-center
-  `.replace(/\s+/g, ' ').trim();
+  const theme = useTheme();
 
   return (
-    <>
-      {/* Sound Toggle */}
-      <div className="fixed top-0 right-0 p-4 sm:p-6 z-20">
+    <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
+      {/* Volume button */}
+      <div className="absolute top-1/2 -translate-y-1/2 right-4">
         <button
           onClick={() => {
             playClickSound(soundEnabled);
             dispatch(setSoundEnabled(!soundEnabled));
           }}
-          className={soundButtonClass}
+          className="text-xl sm:text-2xl cursor-pointer hover:opacity-80 transition-opacity"
         >
-          <span className="mb-[6px] brightness-[1.2] contrast-[1.1]">
+          <span className="text-white/70 brightness-[1.2] contrast-[1.1]">
             {soundEnabled ? '🔊' : '🔇'}
           </span>
         </button>
       </div>
 
-      {/* Game UI */}
-      <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-        {/* Title */}
-        <div className="mb-8 sm:mb-12">
-          <h1 
-            className="text-4xl sm:text-5xl font-['Press_Start_2P'] text-white title-shadow"
-          >
-            Wanderoot
-          </h1>
-        </div>
-
-        {/* Menu Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={() => {
-              playClickSound(soundEnabled);
-              dispatch(setActiveMenu('characterCreator'));
-            }}
-            className={buttonClass}
-          >
-            <span className="text-white brightness-[1.2]">New Game</span>
-          </button>
-
-          <button
-            onClick={() => {
-              playClickSound(soundEnabled);
-              dispatch(setActiveMenu('loadGame'));
-            }}
-            className={buttonClass}
-          >
-            <span className="text-white brightness-[1.2]">Load Game</span>
-          </button>
-
-          <button
-            onClick={() => {
-              playClickSound(soundEnabled);
-              dispatch(setActiveMenu('multiplayer'));
-            }}
-            className={buttonClass}
-          >
-            <span className="text-white brightness-[1.2]">Co-op</span>
-          </button>
-
-          <button
-            onClick={() => {
-              playClickSound(soundEnabled);
-              dispatch(setActiveMenu('settings'));
-            }}
-            className={buttonClass}
-          >
-            <span className="text-white brightness-[1.2]">Settings</span>
-          </button>
-        </div>
+      <div className="mb-8 sm:mb-12">
+        <h1 
+          className="text-[3rem] sm:text-[4rem] font-['Press_Start_2P'] text-white entrance-animation"
+          style={{
+            textShadow: `4px 4px 0px ${theme.primary}, 4px 4px 4px rgba(0, 0, 0, 0.8)`
+          }}
+        >
+          Wanderoot
+        </h1>
       </div>
-    </>
+
+      <div className="flex flex-col gap-4">
+        <button
+          onClick={() => {
+            playClickSound(soundEnabled);
+            onNewGame();
+          }}
+          className="group menu-button-bg w-[240px] h-[52px] rounded-lg text-white font-['Press_Start_2P'] text-lg relative flex items-center justify-center hover:brightness-110 transition-all duration-75 entrance-animation entrance-animation-delay-1"
+          style={{
+            borderColor: theme.border,
+            background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+          }}
+        >
+          <span className="text-white brightness-[1.2]">New Game</span>
+        </button>
+
+        <button
+          onClick={() => {
+            playClickSound(soundEnabled);
+            onLoadGame();
+          }}
+          className="group menu-button-bg w-[240px] h-[52px] rounded-lg text-white font-['Press_Start_2P'] text-lg relative flex items-center justify-center hover:brightness-110 transition-all duration-75 entrance-animation entrance-animation-delay-2"
+          style={{
+            borderColor: theme.border,
+            background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+          }}
+        >
+          <span className="text-white brightness-[1.2]">Load Game</span>
+        </button>
+
+        <button
+          onClick={() => playClickSound(soundEnabled)}
+          className="group menu-button-bg w-[240px] h-[52px] rounded-lg text-white font-['Press_Start_2P'] text-lg relative flex items-center justify-center hover:brightness-110 transition-all duration-75 entrance-animation entrance-animation-delay-3"
+          style={{
+            borderColor: theme.border,
+            background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+          }}
+        >
+          <span className="text-white brightness-[1.2]">Co-op</span>
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-black/80 px-4 py-2 rounded-lg text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            Coming Soon!
+          </div>
+        </button>
+
+        <button
+          onClick={() => {
+            playClickSound(soundEnabled);
+            onSettings();
+          }}
+          className="group menu-button-bg w-[240px] h-[52px] rounded-lg text-white font-['Press_Start_2P'] text-lg relative flex items-center justify-center hover:brightness-110 transition-all duration-75 entrance-animation entrance-animation-delay-4"
+          style={{
+            borderColor: theme.border,
+            background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+          }}
+        >
+          <span className="text-white brightness-[1.2]">Settings</span>
+        </button>
+      </div>
+    </div>
   );
-}; 
+}
+
+export default MainMenu; 

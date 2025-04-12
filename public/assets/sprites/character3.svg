@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="96" height="96" fill="#2A1810"/>
+  
+  <!-- Hair - Red -->
+  <path d="M24 24h48v24H24z" fill="#8B0000"/>
+  <path d="M28 32h40v8H28z" fill="#A52A2A"/>
+  
+  <!-- Face -->
+  <path d="M32 32h32v32H32z" fill="#FFE0BD"/>
+  
+  <!-- Eyes with Glasses -->
+  <path d="M38 44h8v6h-8z" fill="#4A4A4A"/>
+  <path d="M50 44h8v6h-8z" fill="#4A4A4A"/>
+  <path d="M36 46h12v2H36z" stroke="#8B4513" stroke-width="2"/>
+  <path d="M48 46h12v2H48z" stroke="#8B4513" stroke-width="2"/>
+  <path d="M46 47h4" stroke="#8B4513" stroke-width="2"/>
+  
+  <!-- Nose -->
+  <path d="M46 50h4v4h-4z" fill="#FFD0A0"/>
+  
+  <!-- Mouth - Thoughtful -->
+  <path d="M42 58c0-1 6-2 12 0" stroke="#4A4A4A" stroke-width="2"/>
+  
+  <!-- Neck -->
+  <path d="M40 64h16v8H40z" fill="#FFE0BD"/>
+  
+  <!-- Shirt Collar -->
+  <path d="M36 72h24v8H36z" fill="#228B22"/>
+</svg> 

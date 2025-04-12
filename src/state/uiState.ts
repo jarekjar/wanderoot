@@ -1,44 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface UIState {
-  activeMenu: 'none' | 'main' | 'characterCreator' | 'saveSlot' | 'inventory' | 'settings' | 'loadGame' | 'multiplayer';
-  previousMenu: 'none' | 'main' | 'characterCreator' | 'saveSlot' | 'inventory' | 'settings' | 'loadGame' | 'multiplayer';
-  menuTransition: 'none' | 'forward' | 'backward';
-  isPaused: boolean;
-  showDialog: boolean;
-  dialogText: string;
+type MenuScreen = 'main' | 'settings' | 'characterCreator' | 'saveSlot' | 'loadGame' | 'multiplayer' | 'inventory' | 'none' | 'game';
+
+interface UIState {
+  activeMenu: MenuScreen;
+  soundEnabled: boolean;
+  volume: number;
+  screenMode: 'windowed' | 'fullscreen';
 }
 
 const initialState: UIState = {
   activeMenu: 'main',
-  previousMenu: 'none',
-  menuTransition: 'none',
-  isPaused: false,
-  showDialog: false,
-  dialogText: '',
+  soundEnabled: true,
+  volume: 0.5,
+  screenMode: 'windowed'
 };
 
-export const uiSlice = createSlice({
+const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    setActiveMenu: (state, action: PayloadAction<UIState['activeMenu']>) => {
-      state.previousMenu = state.activeMenu;
+    setActiveMenu: (state, action: PayloadAction<MenuScreen>) => {
       state.activeMenu = action.payload;
-      state.menuTransition = action.payload === 'none' ? 'backward' : 'forward';
-      state.isPaused = action.payload !== 'none';
     },
-    setDialog: (state, action: PayloadAction<{ show: boolean; text?: string }>) => {
-      state.showDialog = action.payload.show;
-      if (action.payload.text) {
-        state.dialogText = action.payload.text;
-      }
+    toggleSound: (state) => {
+      state.soundEnabled = !state.soundEnabled;
     },
-    clearMenuTransition: (state) => {
-      state.menuTransition = 'none';
+    setVolume: (state, action: PayloadAction<number>) => {
+      state.volume = action.payload;
     },
-  },
+    setScreenMode: (state, action: PayloadAction<'windowed' | 'fullscreen'>) => {
+      state.screenMode = action.payload;
+    }
+  }
 });
 
-export const { setActiveMenu, setDialog, clearMenuTransition } = uiSlice.actions;
+export const { setActiveMenu, toggleSound, setVolume, setScreenMode } = uiSlice.actions;
 export default uiSlice.reducer; 

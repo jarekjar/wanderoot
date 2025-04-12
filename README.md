@@ -1,6 +1,6 @@
-# ReactFarm Documentation
+# Wanderoot Documentation
 
-ReactFarm is a Stardew Valley-inspired farming game built with React and TypeScript. This documentation covers the technical implementation, game design, and development progress.
+Wanderoot is a Stardew Valley-inspired farming game built with React and TypeScript. This documentation covers the technical implementation, game design, and development progress.
 
 ## Table of Contents
 
@@ -22,8 +22,8 @@ ReactFarm is a Stardew Valley-inspired farming game built with React and TypeScr
 src/
 ├── components/     # React components
 ├── state/         # Redux state management
-├── hooks/         # Custom React hooks
-├── styles/        # CSS and styling
+├── theme/         # Theme configuration
+├── utils/         # Utility functions
 └── types/         # TypeScript type definitions
 
 docs/
@@ -43,7 +43,7 @@ docs/
 
 ## Development Status
 
-ReactFarm is currently in early development. The following features are implemented:
+Wanderoot is currently in early development. The following features are implemented:
 
 - ✅ Main menu with pixel art styling
 - ✅ Save slot system

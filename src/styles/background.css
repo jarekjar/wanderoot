@@ -12,7 +12,6 @@
   right: 0;
   bottom: 0;
 }
-
 /* Remove old background elements that we no longer need */
 .cloud, .mountains, .village-scene, .path, .house, .tree, .fence {
   display: none;

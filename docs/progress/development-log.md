@@ -21,4 +21,14 @@
 - Improved button press animation with inset shadows
 - Made UI mobile responsive with proper text sizing and spacing
 - Fixed title sizing on main menu and settings screens
-- Improved settings screen layout with better spacing between labels and controls 
+- Improved settings screen layout with better spacing between labels and controls
+- Added entrance animations for main menu title and buttons 
+
+## 2024-03-22
+- Reorganized asset structure by moving sprites to public directory
+- Simplified favicon design to a single, centered "W" character
+- Improved character creation form layout and styling
+- Added character class selection with tooltips
+- Implemented pet preference selection
+- Enhanced form validation and submission handling
+- Added back button navigation to main menu 

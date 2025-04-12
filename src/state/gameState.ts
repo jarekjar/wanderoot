@@ -38,6 +38,10 @@ export interface GameState {
   npcs: {
     [id: string]: NPC;
   };
+  playerName: string;
+  playerSprite: number;
+  playerClass: string;
+  playerPet: string;
 }
 
 const initialState: GameState = {
@@ -57,6 +61,10 @@ const initialState: GameState = {
     },
   },
   npcs: {},
+  playerName: '',
+  playerSprite: 1,
+  playerClass: 'Fighter',
+  playerPet: 'cat'
 };
 
 export const gameSlice = createSlice({
@@ -68,9 +76,11 @@ export const gameSlice = createSlice({
     },
     setPlayerName: (state, action: PayloadAction<string>) => {
       state.player.name = action.payload;
+      state.playerName = action.payload;
     },
     setPlayerSprite: (state, action: PayloadAction<number>) => {
       state.player.spriteId = action.payload;
+      state.playerSprite = action.payload;
     },
     setPlayerPosition: (state, action: PayloadAction<{ x: number; y: number }>) => {
       state.player.position = action.payload;
@@ -88,6 +98,12 @@ export const gameSlice = createSlice({
         state.world.time.day += Math.floor(totalMinutes / 1440);
       }
     },
+    setPlayerClass: (state, action: PayloadAction<string>) => {
+      state.playerClass = action.payload;
+    },
+    setPlayerPet: (state, action: PayloadAction<string>) => {
+      state.playerPet = action.payload;
+    }
   },
 });
 
@@ -97,7 +113,9 @@ export const {
   setPlayerSprite,
   setPlayerPosition, 
   setWorldSeed, 
-  advanceTime 
+  advanceTime,
+  setPlayerClass,
+  setPlayerPet
 } = gameSlice.actions;
 
 export default gameSlice.reducer; 
