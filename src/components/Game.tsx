@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../state/store';
 import { useTheme } from '../theme/ThemeContext';
-import { playClickSound } from '../utils/audio';
+import { playClickSound, playBackgroundMusic } from '../utils/audio';
 import { InGameMenu } from './InGameMenu';
 import { Settings } from './Settings';
 import { DialogueBox } from './DialogueBox';
@@ -10,7 +10,7 @@ import { Alert } from './Alert';
 import { SaveSlotManager } from './SaveSlotManager';
 import { saveGame, loadGame } from '../utils/saveLoad';
 import { createNewSave } from '../types/saveGame';
-import { setPlayerName, setPlayerSprite, setPlayerClass } from '../state/gameSlice';
+import { setPlayerName, setPlayerSprite, setPlayerClass, setLocation } from '../state/gameSlice';
 
 interface GameProps {
   onBack: () => void;
@@ -22,6 +22,7 @@ export function Game({ onBack }: GameProps) {
   const playerName = useSelector((state: RootState) => state.game.playerName);
   const playerSprite = useSelector((state: RootState) => state.game.playerSprite);
   const playerClass = useSelector((state: RootState) => state.game.playerClass);
+  const location = useSelector((state: RootState) => state.game.location);
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showSaveSlots, setShowSaveSlots] = useState(false);
@@ -43,8 +44,18 @@ export function Game({ onBack }: GameProps) {
     const timer = setTimeout(() => {
       setDialogueText(dialogueLines[0]);
     }, 500);
+
+    // Set initial location and play appropriate music
+    dispatch(setLocation('cave'));
+    const musicVolume = soundEnabled ? 0.5 : 0;
+    playBackgroundMusic(musicVolume, soundEnabled, 'cave');
     
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      // Switch back to menu music when component unmounts
+      dispatch(setLocation('menu'));
+      playBackgroundMusic(musicVolume, soundEnabled, 'menu');
+    };
   }, []);
 
   const handleNextDialogue = () => {
@@ -106,6 +117,7 @@ export function Game({ onBack }: GameProps) {
         
         // Add current game progress
         saveData.currentDialogue = currentDialogue;
+        saveData.location = location;
         
         // Save to localStorage
         saveGame(saveData, slotId);
@@ -129,6 +141,7 @@ export function Game({ onBack }: GameProps) {
         dispatch(setPlayerName(saveData.playerName));
         dispatch(setPlayerSprite(saveData.playerSprite));
         dispatch(setPlayerClass(saveData.playerClass));
+        dispatch(setLocation(saveData.location));
         
         // Set dialogue progress
         setCurrentDialogue(saveData.currentDialogue);
@@ -137,6 +150,10 @@ export function Game({ onBack }: GameProps) {
         } else {
           setDialogueText('');
         }
+        
+        // Play appropriate music based on location
+        const musicVolume = soundEnabled ? 0.5 : 0;
+        playBackgroundMusic(musicVolume, soundEnabled, saveData.location);
         
         setAlert({ message: 'Game loaded successfully!', type: 'success' });
         playClickSound(soundEnabled);

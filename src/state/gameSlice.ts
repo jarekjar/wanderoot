@@ -1,15 +1,17 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface GameState {
+export interface GameState {
   playerName: string;
   playerSprite: number;
   playerClass: string;
+  location: 'menu' | 'cave' | 'forest' | 'town';
 }
 
 const initialState: GameState = {
   playerName: '',
   playerSprite: 1,
-  playerClass: 'Wanderer'
+  playerClass: '',
+  location: 'menu'
 };
 
 const gameSlice = createSlice({
@@ -24,9 +26,12 @@ const gameSlice = createSlice({
     },
     setPlayerClass: (state, action: PayloadAction<string>) => {
       state.playerClass = action.payload;
+    },
+    setLocation: (state, action: PayloadAction<GameState['location']>) => {
+      state.location = action.payload;
     }
   }
 });
 
-export const { setPlayerName, setPlayerSprite, setPlayerClass } = gameSlice.actions;
+export const { setPlayerName, setPlayerSprite, setPlayerClass, setLocation } = gameSlice.actions;
 export default gameSlice.reducer; 

@@ -1,4 +1,8 @@
-export interface SaveGame {
+import { GameState } from '../state/gameSlice';
+
+export const CURRENT_SAVE_VERSION = '0.1.0';
+
+export interface SaveGame extends GameState {
   // Player info
   playerName: string;
   playerSprite: number;
@@ -18,19 +22,18 @@ export interface SaveGame {
   // etc.
 }
 
-export const CURRENT_SAVE_VERSION = '0.1.0';
-
-export function createNewSave(
+export const createNewSave = (
   playerName: string,
   playerSprite: number,
   playerClass: string
-): SaveGame {
+): SaveGame => {
   return {
+    version: CURRENT_SAVE_VERSION,
     playerName,
     playerSprite,
     playerClass,
+    location: 'cave',
     currentDialogue: 0,
-    lastSaveDate: new Date().toISOString(),
-    version: CURRENT_SAVE_VERSION
+    lastSaveDate: new Date().toISOString()
   };
-} 
+}; 
