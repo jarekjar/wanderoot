@@ -6,12 +6,14 @@ import { useTheme } from '../theme/ThemeContext';
 import { playClickSound } from '../utils/audio';
 import '../styles/background.css';
 import '../styles/menu.css';
+import KnightSprite from '/assets/sprites/character1.svg';
+import RangerSprite from '/assets/sprites/character2.svg';
+import MageSprite from '/assets/sprites/character3.svg';
 
 const CHARACTER_SPRITES = [
-  { id: 1, sprite: '/assets/sprites/knight.png' },
-  { id: 2, sprite: '/assets/sprites/ranger.png' },
-  { id: 3, sprite: '/assets/sprites/mage.png' },
-  { id: 4, sprite: '/assets/sprites/cleric.png' }
+  { id: 1, sprite: KnightSprite },
+  { id: 2, sprite: RangerSprite },
+  { id: 3, sprite: MageSprite }
 ] as const;
 
 const CHARACTER_CLASSES = [
@@ -109,13 +111,17 @@ export function CharacterCreator({ onBack, onCreateCharacter }: CharacterCreator
                     playClickSound(soundEnabled);
                     dispatch(setPlayerSprite(char.id));
                   }}
-                  className="menu-button-bg p-2 rounded-lg border-2 hover:brightness-110 transition-all"
+                  className={`menu-button-bg w-[52px] h-[52px] rounded-lg border-2 hover:brightness-110 transition-all flex items-center justify-center ${playerSprite === char.id ? 'border-white' : ''}`}
                   style={{
                     borderColor: playerSprite === char.id ? 'white' : theme.border,
                     background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
                   }}
                 >
-                  <img src={char.sprite} alt={`Character ${char.id}`} className="w-12 h-12" />
+                  <img 
+                    src={char.sprite} 
+                    alt={`Character ${char.id}`} 
+                    className="w-8 h-8 object-contain" 
+                  />
                 </button>
               ))}
             </div>
