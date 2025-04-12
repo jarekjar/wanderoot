@@ -196,16 +196,6 @@ git push origin main --tags
    - Attach the portable executable
    - Deploy to GitHub Pages
 
-## 🌐 Web Version
-
-The game is also available to play directly in your browser through GitHub Pages at:
-https://jarekjar.github.io/wanderoot/
-
-Note: The web version has some limitations compared to the desktop version:
-- No file system access for save games (uses browser localStorage instead)
-- Some features may be browser-dependent
-- Performance may vary based on your browser and device
-
 ## 🤝 Contributing
 
 We welcome contributions! Please:
