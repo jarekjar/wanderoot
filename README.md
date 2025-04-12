@@ -13,7 +13,7 @@ A 2D RPG game built with React, Redux, and Electron.
 4. Run the installer
 5. Launch Wanderoot from your Start Menu or Desktop shortcut
 
-### macOS
+### macOS !!!Coming Soon, need an apple Cert
 1. Go to the [Releases](https://github.com/jarekjar/wanderoot/releases) page
 2. Find the latest version
 3. Download the appropriate version for your Mac:
