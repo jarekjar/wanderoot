@@ -28,12 +28,6 @@
       "electron/**/*",
       "package.json"
     ],
-    "extraResources": [
-      {
-        "from": "public/assets",
-        "to": "public/assets"
-      }
-    ],
     "asar": true
   },
   "scripts": {

@@ -12,6 +12,15 @@ import { saveGame, loadGame } from '../utils/saveLoad';
 import { createNewSave } from '../types/saveGame';
 import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../state/gameSlice';
 import { useNavigate } from 'react-router-dom';
+import KnightSprite from '../assets/sprites/character1.svg';
+import RangerSprite from '../assets/sprites/character2.svg';
+import MageSprite from '../assets/sprites/character3.svg';
+
+const CHARACTER_SPRITES = [
+  { id: 1, sprite: KnightSprite },
+  { id: 2, sprite: RangerSprite },
+  { id: 3, sprite: MageSprite }
+] as const;
 
 export function Game() {
   const navigate = useNavigate();
@@ -218,7 +227,7 @@ export function Game() {
           </button>
           <div className="w-[48px] h-[48px] bg-[#2A1810] rounded-lg border-2 border-[#8B4513] flex items-center justify-center">
             <img 
-              src={`/assets/sprites/character${playerSprite}.svg`} 
+              src={CHARACTER_SPRITES[playerSprite - 1].sprite}
               alt="Player" 
               className="w-full h-full"
             />
@@ -275,7 +284,7 @@ export function Game() {
             }}
           >
             <img 
-              src={`/assets/sprites/character${playerSprite}.svg`} 
+              src={CHARACTER_SPRITES[playerSprite - 1].sprite}
               alt="Player"
               className="w-[180px] h-[180px] pixelated"
               style={{
