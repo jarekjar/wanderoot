@@ -2,21 +2,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../state/store';
 import { useTheme } from '../../theme/ThemeContext';
 
-const MONTHS = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
-
-function getOrdinalSuffix(day: number): string {
-  if (day > 3 && day < 21) return 'th';
-  switch (day % 10) {
-    case 1: return 'st';
-    case 2: return 'nd';
-    case 3: return 'rd';
-    default: return 'th';
-  }
-}
-
 function formatTime(hour: number, minute: number): string {
   const period = hour >= 12 ? 'PM' : 'AM';
   const displayHour = hour % 12 || 12;
@@ -25,9 +10,7 @@ function formatTime(hour: number, minute: number): string {
 }
 
 function formatDate(month: number, day: number, year: number): string {
-  const monthName = MONTHS[month - 1];
-  const suffix = getOrdinalSuffix(day);
-  return `${monthName} ${day}${suffix}, ${year}`;
+  return `${month}/${day}/${year}`;
 }
 
 export function TimeDate() {

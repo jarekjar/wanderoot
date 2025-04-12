@@ -66,8 +66,17 @@ export function SaveSlotManager({
     setConfirmSlot(null);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
+  const formatTime = (time: { hour: number; minute: number }) => {
+    const ampm = time.hour >= 12 ? 'PM' : 'AM';
+    const hour = time.hour % 12 || 12;
+    const minute = time.minute.toString().padStart(2, '0');
+    return `${hour}:${minute} ${ampm}`;
+  };
+
+  const formatDate = (date: { year: number; month: number; day: number }) => {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                    'July', 'August', 'September', 'October', 'November', 'December'];
+    return `${months[date.month - 1]} ${date.day}, ${date.year}`;
   };
 
   const content = (
@@ -125,10 +134,10 @@ export function SaveSlotManager({
                     {!isEmpty && (
                       <>
                         <span className="text-xs text-white/70">
-                          {saveData.playerClass} - Saved: {formatDate(saveData.lastSaveDate)}
+                          {formatTime(saveData.time)} - {formatDate(saveData.date)}
                         </span>
                         <span className="text-xs text-white/50">
-                          Version: {saveData.version}
+                          Saved: {new Date(saveData.lastSaveDate).toLocaleDateString()}
                         </span>
                       </>
                     )}

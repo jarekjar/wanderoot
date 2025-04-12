@@ -10,13 +10,25 @@ import { Alert } from '../ui/Alert';
 import { SaveSlotManager } from '../menus/SaveSlotManager';
 import { saveGame, loadGame } from '../../utils/saveLoad';
 import { createNewSave } from '../../types/saveGame';
-import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../../state/gameSlice';
+import { 
+  setPlayerName, 
+  setPlayerSprite, 
+  setPlayerClass, 
+  setPaused, 
+  setCurrentDialogue, 
+  setDialogueText,
+  setPlayerPet,
+  setHealth,
+  setStamina,
+  updateTime,
+  updateDate
+} from '../../state/gameSlice';
 import { Player } from './Player';
 import { getVersionWithV } from '../../utils/version';
 import { Inventory } from '../ui/Inventory';
 import { TimeDate } from '../ui/TimeDate';
-import { StatusBars } from '../ui/StatusBars';
 import { MenuButton } from '../ui/MenuButton';
+import { StatusBars } from '../ui/StatusBars';
 
 interface GameProps {
   onExitToMenu: () => void;
@@ -27,12 +39,21 @@ export function Game({ onExitToMenu }: GameProps) {
   const dispatch = useDispatch();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
-  const playerName = useSelector((state: RootState) => state.game.playerName);
-  const playerSprite = useSelector((state: RootState) => state.game.playerSprite);
-  const playerClass = useSelector((state: RootState) => state.game.playerClass);
-  const isPaused = useSelector((state: RootState) => state.game.isPaused);
-  const currentDialogue = useSelector((state: RootState) => state.game.currentDialogue);
-  const dialogueText = useSelector((state: RootState) => state.game.dialogueText);
+  const { 
+    playerName, 
+    playerSprite, 
+    playerClass,
+    playerPet,
+    time,
+    date,
+    health,
+    maxHealth,
+    stamina,
+    maxStamina,
+    currentDialogue,
+    dialogueText,
+    isPaused
+  } = useSelector((state: RootState) => state.game);
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showSaveSlots, setShowSaveSlots] = useState(false);
@@ -144,7 +165,14 @@ export function Game({ onExitToMenu }: GameProps) {
         const saveData = createNewSave(
           playerName,
           playerSprite,
-          playerClass
+          playerClass,
+          playerPet,
+          time,
+          date,
+          health,
+          maxHealth,
+          stamina,
+          maxStamina
         );
         
         // Add current game progress
@@ -172,6 +200,15 @@ export function Game({ onExitToMenu }: GameProps) {
         dispatch(setPlayerName(saveData.playerName));
         dispatch(setPlayerSprite(saveData.playerSprite));
         dispatch(setPlayerClass(saveData.playerClass));
+        dispatch(setPlayerPet(saveData.playerPet));
+        
+        // Load time and date
+        dispatch(updateTime(saveData.time));
+        dispatch(updateDate(saveData.date));
+        
+        // Load health and stamina
+        dispatch(setHealth(saveData.health));
+        dispatch(setStamina(saveData.stamina));
         
         // Set dialogue progress
         dispatch(setCurrentDialogue(saveData.currentDialogue));
