@@ -64,7 +64,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
 
         {/* Menu Container */}
         <div 
-          className="p-6 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-full max-w-[800px] menu-slide-up"
+          className="p-6 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-[400px] menu-slide-up"
           style={{
             borderColor: theme.border,
             background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -73,7 +73,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
           <div className="flex flex-col gap-4">
             <button
               onClick={() => handleButtonClick(onClose)}
-              className={menuButtonClass}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -84,7 +84,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
 
             <button
               onClick={() => handleButtonClick(onSettings)}
-              className={menuButtonClass}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -95,7 +95,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
 
             <button
               onClick={() => handleButtonClick(onSave)}
-              className={menuButtonClass}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -106,7 +106,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
 
             <button
               onClick={() => handleButtonClick(onLoad)}
-              className={menuButtonClass}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -117,7 +117,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
 
             <button
               onClick={() => handleButtonClick(onExit)}
-              className={menuButtonClass}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`

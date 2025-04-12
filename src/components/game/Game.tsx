@@ -253,7 +253,7 @@ export function Game({ onExitToMenu }: GameProps) {
       </div>
 
       {/* Inventory */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[70] pointer-events-auto">
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 z-[70] pointer-events-auto">
         <Inventory />
       </div>
 
