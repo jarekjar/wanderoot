@@ -16,7 +16,7 @@ export function Game({ onBack }: GameProps) {
   const playerClass = useSelector((state: RootState) => state.game.playerClass);
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-start min-h-screen p-4 bg-[#2A1810]">
+    <div className="relative z-10 flex flex-col items-center justify-start min-h-screen h-screen w-full p-4 bg-[#2A1810]">
       {/* Game Header */}
       <div className="w-full max-w-[1200px] flex items-center justify-between mb-8 p-4 settings-row-bg rounded-lg">
         <div className="flex items-center gap-4">

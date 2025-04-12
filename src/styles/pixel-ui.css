@@ -68,12 +68,50 @@
 }
 
 .settings-select-bg {
-  background-color: var(--theme-primary);
-  border-color: var(--theme-border);
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-color: var(--theme-primary) !important;
+  border: 2px solid var(--theme-border) !important;
+  color: white !important;
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  border-radius: 4px !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 16px !important;
+  padding-right: 32px !important;
+}
+
+.settings-select-bg option {
+  background-color: var(--theme-secondary) !important;
+  color: white !important;
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 12px !important;
+  padding: 8px !important;
 }
 
 .settings-select-bg:hover {
-  background-color: var(--theme-secondary);
+  background-color: var(--theme-secondary) !important;
+}
+
+.settings-select-bg:focus {
+  outline: none !important;
+  border-color: var(--theme-border) !important;
+  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.5) !important;
+}
+
+/* Hide default arrow in IE/Edge */
+.settings-select-bg::-ms-expand {
+  display: none !important;
+}
+
+/* Ensure proper z-index for dropdown */
+.settings-select-bg {
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 .settings-slider-bg {
@@ -132,8 +170,81 @@
   outline: none;
 }
 
-.pixel-input:focus {
-  box-shadow: 0 0 0 2px #A0522D;
+/* Override native select styling */
+select.settings-select-bg.pixel-select {
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-color: var(--theme-secondary) !important;
+  border: 2px solid var(--theme-border) !important;
+  color: white !important;
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  border-radius: 4px !important;
+  padding: 8px 32px 8px 12px !important;
+  min-width: 120px !important;
+  width: fit-content !important;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 16px !important;
+  text-rendering: pixelated !important;
+  -webkit-font-smoothing: none !important;
+}
+
+select.settings-select-bg.pixel-select option {
+  background-color: var(--theme-secondary) !important;
+  color: white !important;
+  font-family: 'Press Start 2P', cursive !important;
+  font-size: 12px !important;
+  padding: 8px !important;
+}
+
+select.settings-select-bg.pixel-select:hover {
+  filter: brightness(1.1) !important;
+}
+
+select.settings-select-bg.pixel-select:focus {
+  outline: none !important;
+  border-color: var(--theme-border) !important;
+  box-shadow: 0 0 0 2px rgba(139, 69, 19, 0.5) !important;
+}
+
+/* Hide default arrow in all browsers */
+select.settings-select-bg.pixel-select::-ms-expand {
+  display: none !important;
+}
+
+select.settings-select-bg.pixel-select::-webkit-select-arrow {
+  display: none !important;
+}
+
+/* Ensure proper z-index for dropdown */
+select.settings-select-bg.pixel-select {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* Remove any system styling */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  select.settings-select-bg.pixel-select {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+  }
+}
+
+@-moz-document url-prefix() {
+  select.settings-select-bg.pixel-select {
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+}
+
+/* Remove focus ring in Safari */
+select.settings-select-bg.pixel-select:focus {
+  outline: none !important;
+  -webkit-focus-ring-color: transparent !important;
 }
 
 .pixel-hud {

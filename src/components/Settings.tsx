@@ -93,10 +93,15 @@ export function Settings({ onBack }: SettingsProps) {
     min-w-[100px] sm:min-w-[120px]
     w-fit 
     appearance-none 
+    -webkit-appearance-none
+    -moz-appearance-none
     cursor-pointer
     [&>option]:bg-[#8B4513]
     [&>option]:text-white
     [&>option]:cursor-pointer
+    [&>option]:font-['Press_Start_2P']
+    [&>option]:text-xs
+    [&>option]:py-2
   `.replace(/\s+/g, ' ').trim();
 
   return (

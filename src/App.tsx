@@ -49,7 +49,7 @@ function AppContent() {
   };
 
   const handleCreateCharacter = () => {
-    navigate('/game');
+    setCurrentScreen('game');
   };
 
   const handleOpenSettings = () => {

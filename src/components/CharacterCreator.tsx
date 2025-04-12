@@ -38,6 +38,8 @@ export function CharacterCreator({ onBack, onCreateCharacter }: CharacterCreator
     if (playerName.trim()) {
       playClickSound(soundEnabled);
       onCreateCharacter();
+    } else {
+      console.log('Please enter a character name');
     }
   };
 
@@ -98,35 +100,6 @@ export function CharacterCreator({ onBack, onCreateCharacter }: CharacterCreator
             />
           </div>
 
-          {/* Character Selection */}
-          <div className={settingRowClass}>
-            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
-              Choose Avatar
-            </span>
-            <div className="flex gap-4">
-              {CHARACTER_SPRITES.map((char) => (
-                <button
-                  key={char.id}
-                  onClick={() => {
-                    playClickSound(soundEnabled);
-                    dispatch(setPlayerSprite(char.id));
-                  }}
-                  className={`menu-button-bg w-[52px] h-[52px] rounded-lg border-2 hover:brightness-110 transition-all flex items-center justify-center ${playerSprite === char.id ? 'border-white' : ''}`}
-                  style={{
-                    borderColor: playerSprite === char.id ? 'white' : theme.border,
-                    background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
-                  }}
-                >
-                  <img 
-                    src={char.sprite} 
-                    alt={`Character ${char.id}`} 
-                    className="w-8 h-8 object-contain" 
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
           {/* Character Class */}
           <div className={settingRowClass}>
             <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
@@ -150,7 +123,7 @@ export function CharacterCreator({ onBack, onCreateCharacter }: CharacterCreator
                   <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
                     {charClass.name}
                   </span>
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 max-w-[180px] text-center pointer-events-none z-50">
+                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 max-w-[360px] text-center pointer-events-none z-50">
                     {charClass.description}
                   </div>
                 </button>
@@ -182,6 +155,56 @@ export function CharacterCreator({ onBack, onCreateCharacter }: CharacterCreator
                   </span>
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Character Selection */}
+          <div className="settings-row-bg box-border w-full h-[160px] rounded-lg px-4 flex flex-col items-center justify-center gap-4">
+            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
+              Choose Avatar
+            </span>
+            <div className="flex gap-8 items-center justify-center">
+              <button
+                onClick={() => {
+                  playClickSound(soundEnabled);
+                  dispatch(setPlayerSprite(playerSprite > 1 ? playerSprite - 1 : CHARACTER_SPRITES.length));
+                }}
+                className="menu-button-bg w-[40px] h-[40px] rounded-lg border-2 hover:brightness-110 transition-all flex items-center justify-center"
+                style={{
+                  borderColor: theme.border,
+                  background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+                }}
+              >
+                <span className="text-white text-xl">←</span>
+              </button>
+              
+              <div 
+                className="menu-button-bg w-[120px] h-[120px] rounded-lg border-2 hover:brightness-110 transition-all flex items-center justify-center"
+                style={{
+                  borderColor: theme.border,
+                  background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+                }}
+              >
+                <img 
+                  src={CHARACTER_SPRITES[playerSprite - 1].sprite} 
+                  alt={`Character ${playerSprite}`} 
+                  className="w-24 h-24 object-contain" 
+                />
+              </div>
+
+              <button
+                onClick={() => {
+                  playClickSound(soundEnabled);
+                  dispatch(setPlayerSprite(playerSprite < CHARACTER_SPRITES.length ? playerSprite + 1 : 1));
+                }}
+                className="menu-button-bg w-[40px] h-[40px] rounded-lg border-2 hover:brightness-110 transition-all flex items-center justify-center"
+                style={{
+                  borderColor: theme.border,
+                  background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+                }}
+              >
+                <span className="text-white text-xl">→</span>
+              </button>
             </div>
           </div>
 
