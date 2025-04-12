@@ -26,13 +26,15 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json",
-      "public/assets/**/*"
+      "package.json"
     ],
-    "asar": true,
-    "asarUnpack": [
-      "assets/**/*"
-    ]
+    "extraResources": [
+      {
+        "from": "public/assets",
+        "to": "public/assets"
+      }
+    ],
+    "asar": true
   },
   "scripts": {
     "dev": "vite",
