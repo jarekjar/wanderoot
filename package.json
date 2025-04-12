@@ -15,7 +15,7 @@
       "output": "release"
     },
     "win": {
-      "target": ["portable", "dir"],
+      "target": ["portable", "dir"]
     },
     "files": [
       "dist/**/*",
