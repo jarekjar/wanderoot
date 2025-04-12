@@ -9,8 +9,10 @@ import { SaveSlotManager } from './components/SaveSlotManager';
 import { VolumeButton } from './components/VolumeButton';
 import { ThemeProvider, useTheme } from './theme/ThemeContext';
 import { playBackgroundMusic } from './utils/audio';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './state/store';
+import { loadGame } from './utils/saveLoad';
+import { setPlayerName, setPlayerSprite, setPlayerClass } from './state/gameSlice';
 import './styles/background.css';
 import './styles/menu.css';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
@@ -18,6 +20,7 @@ import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-route
 function AppContent() {
   const [currentScreen, setCurrentScreen] = useState<'menu' | 'settings' | 'game' | 'character' | 'saveSlot'>('menu');
   const theme = useTheme();
+  const dispatch = useDispatch();
   const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -60,6 +63,26 @@ function AppContent() {
     setCurrentScreen('menu');
   };
 
+  const handleLoadSlotSelect = (slotId: number) => {
+    try {
+      const saveData = loadGame(slotId);
+      if (!saveData) {
+        console.warn('No save data found');
+        return;
+      }
+      
+      // Load game state
+      dispatch(setPlayerName(saveData.playerName));
+      dispatch(setPlayerSprite(saveData.playerSprite));
+      dispatch(setPlayerClass(saveData.playerClass));
+      
+      // Switch to game screen
+      setCurrentScreen('game');
+    } catch (error) {
+      console.error('Failed to load game:', error);
+    }
+  };
+
   return (
     <>
       <div className="main-menu-bg" />
@@ -76,7 +99,12 @@ function AppContent() {
           <CharacterCreator onBack={handleBackToMenu} onCreateCharacter={handleCreateCharacter} />
         )}
         {currentScreen === 'saveSlot' && (
-          <SaveSlotManager onBack={handleBackToMenu} />
+          <SaveSlotManager 
+            onBack={handleBackToMenu}
+            onSelectSlot={handleLoadSlotSelect}
+            mode="load"
+            title="Load Game"
+          />
         )}
         {currentScreen === 'settings' && (
           <Settings onBack={handleBackToMenu} />

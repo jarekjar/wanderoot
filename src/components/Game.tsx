@@ -7,6 +7,7 @@ import { InGameMenu } from './InGameMenu';
 import { Settings } from './Settings';
 import { DialogueBox } from './DialogueBox';
 import { Alert } from './Alert';
+import { SaveSlotManager } from './SaveSlotManager';
 import { saveGame, loadGame } from '../utils/saveLoad';
 import { createNewSave } from '../types/saveGame';
 import { setPlayerName, setPlayerSprite, setPlayerClass } from '../state/gameSlice';
@@ -23,6 +24,8 @@ export function Game({ onBack }: GameProps) {
   const playerClass = useSelector((state: RootState) => state.game.playerClass);
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showSaveSlots, setShowSaveSlots] = useState(false);
+  const [saveSlotMode, setSaveSlotMode] = useState<'save' | 'load'>('save');
   const [alert, setAlert] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   
   // Dialogue state
@@ -81,56 +84,73 @@ export function Game({ onBack }: GameProps) {
   };
 
   const handleSave = () => {
-    try {
-      const saveData = createNewSave(
-        playerName,
-        playerSprite,
-        playerClass
-      );
-      
-      // Add current game progress
-      saveData.currentDialogue = currentDialogue;
-      
-      // Save to localStorage
-      saveGame(saveData);
-      
-      setAlert({ message: 'Game saved successfully!', type: 'success' });
-      playClickSound(soundEnabled);
-      setShowMenu(false);
-    } catch (error) {
-      console.error('Failed to save game:', error);
-      setAlert({ message: 'Failed to save game', type: 'error' });
-    }
+    setSaveSlotMode('save');
+    setShowSaveSlots(true);
+    setShowMenu(false);
   };
 
   const handleLoad = () => {
-    try {
-      const saveData = loadGame();
-      if (!saveData) {
-        console.warn('No save data found');
-        // TODO: Show message to user
-        return;
+    setSaveSlotMode('load');
+    setShowSaveSlots(true);
+    setShowMenu(false);
+  };
+
+  const handleSaveSlotSelect = (slotId: number) => {
+    if (saveSlotMode === 'save') {
+      try {
+        const saveData = createNewSave(
+          playerName,
+          playerSprite,
+          playerClass
+        );
+        
+        // Add current game progress
+        saveData.currentDialogue = currentDialogue;
+        
+        // Save to localStorage
+        saveGame(saveData, slotId);
+        
+        setAlert({ message: 'Game saved successfully!', type: 'success' });
+        playClickSound(soundEnabled);
+        setShowSaveSlots(false);
+      } catch (error) {
+        console.error('Failed to save game:', error);
+        setAlert({ message: 'Failed to save game', type: 'error' });
       }
-      
-      // Load game state
-      dispatch(setPlayerName(saveData.playerName));
-      dispatch(setPlayerSprite(saveData.playerSprite));
-      dispatch(setPlayerClass(saveData.playerClass));
-      
-      // Set dialogue progress
-      setCurrentDialogue(saveData.currentDialogue);
-      if (saveData.currentDialogue < dialogueLines.length) {
-        setDialogueText(dialogueLines[saveData.currentDialogue]);
-      } else {
-        setDialogueText('');
+    } else {
+      try {
+        const saveData = loadGame(slotId);
+        if (!saveData) {
+          setAlert({ message: 'No save data found', type: 'error' });
+          return;
+        }
+        
+        // Load game state
+        dispatch(setPlayerName(saveData.playerName));
+        dispatch(setPlayerSprite(saveData.playerSprite));
+        dispatch(setPlayerClass(saveData.playerClass));
+        
+        // Set dialogue progress
+        setCurrentDialogue(saveData.currentDialogue);
+        if (saveData.currentDialogue < dialogueLines.length) {
+          setDialogueText(dialogueLines[saveData.currentDialogue]);
+        } else {
+          setDialogueText('');
+        }
+        
+        setAlert({ message: 'Game loaded successfully!', type: 'success' });
+        playClickSound(soundEnabled);
+        setShowSaveSlots(false);
+      } catch (error) {
+        console.error('Failed to load game:', error);
+        setAlert({ message: 'Failed to load game', type: 'error' });
       }
-      
-      playClickSound(soundEnabled);
-      setShowMenu(false);
-    } catch (error) {
-      console.error('Failed to load game:', error);
-      // TODO: Show error message to user
     }
+  };
+
+  const handleSaveSlotsBack = () => {
+    setShowSaveSlots(false);
+    setShowMenu(true);
   };
 
   return (
@@ -250,6 +270,15 @@ export function Game({ onBack }: GameProps) {
       {/* Settings Panel */}
       {showSettings && (
         <Settings onBack={handleCloseSettings} />
+      )}
+
+      {showSaveSlots && (
+        <SaveSlotManager
+          onBack={handleSaveSlotsBack}
+          onSelectSlot={handleSaveSlotSelect}
+          mode={saveSlotMode}
+          title={saveSlotMode === 'save' ? 'Save Game' : 'Load Game'}
+        />
       )}
 
       {/* Version number */}
