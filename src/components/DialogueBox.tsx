@@ -6,13 +6,14 @@ import { useTheme } from '../theme/ThemeContext';
 interface DialogueBoxProps {
   text: string;
   onNext: () => void;
+  isPaused?: boolean;
 }
 
-export function DialogueBox({ text, onNext }: DialogueBoxProps) {
+export function DialogueBox({ text, onNext, isPaused = false }: DialogueBoxProps) {
   const theme = useTheme();
-  const isPaused = useSelector((state: RootState) => state.game.isPaused);
-  const [displayedText, setDisplayedText] = useState('');
   const [isTyping, setIsTyping] = useState(true);
+  const [displayedText, setDisplayedText] = useState('');
+  const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const currentIndexRef = useRef(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   

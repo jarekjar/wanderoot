@@ -17,11 +17,11 @@ import RangerSprite from '../assets/sprites/character2.svg';
 import MageSprite from '../assets/sprites/character3.svg';
 import { getVersionWithV } from '../utils/version';
 
-const CHARACTER_SPRITES = [
-  { id: 1, sprite: KnightSprite },
-  { id: 2, sprite: RangerSprite },
-  { id: 3, sprite: MageSprite }
-] as const;
+const CHARACTER_SPRITES = {
+  1: KnightSprite,
+  2: RangerSprite,
+  3: MageSprite
+} as const;
 
 export function Game() {
   const navigate = useNavigate();
@@ -45,6 +45,9 @@ export function Game() {
     'You wake up in a mysterious cave...',
     'With no items or memory of how you got here.'
   ];
+
+  // Get the current sprite based on playerSprite ID
+  const currentSprite = CHARACTER_SPRITES[playerSprite as keyof typeof CHARACTER_SPRITES] || CHARACTER_SPRITES[1];
 
   // Handle keyboard events
   useEffect(() => {
@@ -140,7 +143,7 @@ export function Game() {
     setShowMenu(false);
   };
 
-  const handleSaveSlotSelect = (slotId: number) => {
+  const handleSaveSlotSelect = async (slotId: number) => {
     if (saveSlotMode === 'save') {
       try {
         const saveData = createNewSave(
@@ -152,8 +155,8 @@ export function Game() {
         // Add current game progress
         saveData.currentDialogue = currentDialogue;
         
-        // Save to localStorage
-        saveGame(saveData, slotId);
+        // Save to storage
+        await saveGame(saveData, slotId);
         
         setAlert({ message: 'Game saved successfully!', type: 'success' });
         playClickSound(soundEnabled);
@@ -164,7 +167,7 @@ export function Game() {
       }
     } else {
       try {
-        const saveData = loadGame(slotId);
+        const saveData = await loadGame(slotId);
         if (!saveData) {
           setAlert({ message: 'No save data found', type: 'error' });
           return;
@@ -232,8 +235,8 @@ export function Game() {
           </button>
           <div className="w-[48px] h-[48px] bg-[#2A1810] rounded-lg border-2 border-[#8B4513] flex items-center justify-center">
             <img 
-              src={CHARACTER_SPRITES[playerSprite - 1].sprite}
-              alt="Player" 
+              src={currentSprite}
+              alt={`${playerClass} character`}
               className="w-full h-full"
             />
           </div>
@@ -279,24 +282,12 @@ export function Game() {
         </div>
 
         {/* Player Character */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div 
-            className="w-[196px] h-[196px] rounded-lg flex items-center justify-center"
-            style={{
-              background: `${theme.secondary}40`,
-              borderColor: theme.border,
-              filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.7))'
-            }}
-          >
-            <img 
-              src={CHARACTER_SPRITES[playerSprite - 1].sprite}
-              alt="Player"
-              className="w-[180px] h-[180px] pixelated"
-              style={{
-                imageRendering: 'pixelated'
-              }}
-            />
-          </div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <img 
+            src={currentSprite} 
+            alt={`${playerClass} character`}
+            className="w-32 h-32"
+          />
         </div>
 
         {/* Dialogue Box */}
@@ -304,6 +295,7 @@ export function Game() {
           <DialogueBox
             text={dialogueText}
             onNext={handleNextDialogue}
+            isPaused={isPaused}
           />
         )}
       </div>

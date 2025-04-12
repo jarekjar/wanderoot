@@ -80,9 +80,9 @@ function AppContent() {
     navigate('/');
   };
 
-  const handleLoadSlotSelect = (slotId: number) => {
+  const handleLoadSlotSelect = async (slotId: number) => {
     try {
-      const saveData = loadGame(slotId);
+      const saveData = await loadGame(slotId);
       if (!saveData) {
         console.warn('No save data found');
         return;
