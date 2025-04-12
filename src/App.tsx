@@ -16,6 +16,7 @@ import { setPlayerName, setPlayerSprite, setPlayerClass } from './state/gameStat
 import './styles/background.css';
 import './styles/menu.css';
 import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { getVersionWithV } from './utils/version';
 
 // Redirect component to handle initial navigation
 function InitialRedirect() {
@@ -38,34 +39,26 @@ function AppContent() {
   const theme = useTheme();
   const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
-  const [musicStarted, setMusicStarted] = useState(false);
   const dispatch = useDispatch();
 
-  // Initialize music once after first interaction
+  // Initialize music on mount
   useEffect(() => {
-    if (!musicStarted && soundEnabled) {
-      playBackgroundMusic(musicVolume, soundEnabled);
-      setMusicStarted(true);
-    }
-  }, [musicStarted, soundEnabled]);
+    playBackgroundMusic(musicVolume, soundEnabled);
+  }, []); // Only run on mount
 
   // Handle volume changes
   useEffect(() => {
-    if (musicStarted) {
-      updateMusicVolume(musicVolume);
-    }
-  }, [musicVolume, musicStarted]);
+    updateMusicVolume(musicVolume);
+  }, [musicVolume]);
 
   // Handle sound enabled/disabled
   useEffect(() => {
-    if (musicStarted) {
-      if (soundEnabled) {
-        playBackgroundMusic(musicVolume, soundEnabled);
-      } else {
-        updateMusicVolume(0);
-      }
+    if (soundEnabled) {
+      playBackgroundMusic(musicVolume, soundEnabled);
+    } else {
+      updateMusicVolume(0);
     }
-  }, [soundEnabled, musicStarted]);
+  }, [soundEnabled]);
 
   const handleNewGame = () => {
     navigate('/character');
@@ -157,7 +150,7 @@ function AppContent() {
             textShadow: `2px 2px 0px ${theme.primary}, 2px 2px 4px rgba(0, 0, 0, 0.8)`
           }}
         >
-          v0.1.0
+          {getVersionWithV()}
         </div>
       </div>
     </>

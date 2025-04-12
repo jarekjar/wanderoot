@@ -1,6 +1,36 @@
 # Wanderoot
 
-A charming pixel-art farming and exploration game built with React, Electron, and PixiJS.
+A 2D RPG game built with React, Redux, and Electron.
+
+## Current Status
+
+Wanderoot is currently in early development. Key features implemented:
+
+- Character creation with multiple classes
+- Basic movement and collision detection
+- Dialogue system
+- Menu system
+- Save/Load game functionality
+- Basic combat mechanics
+
+## Development
+
+To run the development version:
+
+```bash
+npm install
+npm run electron-dev
+```
+
+To build the installer:
+
+```bash
+npm run electron-pack
+```
+
+## License
+
+MIT
 
 ## 🎮 Current Development Status
 
@@ -59,8 +89,6 @@ This generates:
 ```
 wanderoot/
 ├── electron/          # Electron main process files
-├── public/           
-│   └── assets/       # Game assets (audio, images)
 ├── src/
 │   ├── components/   # React components
 │   ├── state/        # Redux store and slices
@@ -104,10 +132,6 @@ We welcome contributions! Please:
 1. Fork the repository
 2. Create a feature branch
 3. Submit a Pull Request
-
-## 📝 License
-
-[Your chosen license]
 
 ## 🙏 Acknowledgments
 
