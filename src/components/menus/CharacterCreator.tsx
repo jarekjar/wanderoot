@@ -34,11 +34,11 @@ export function CharacterCreator({ onBack, onCreateCharacter }: CharacterCreator
   const { playerName, playerSprite, playerClass, playerPet } = useSelector((state: RootState) => state.game);
 
   const handleSubmit = () => {
-    if (playerName.trim()) {
+    if (playerName.trim() && playerClass) {
       playClickSound(soundEnabled);
       onCreateCharacter();
     } else {
-      console.log('Please enter a character name');
+      console.log('Please enter a character name and select a class');
     }
   };
 
@@ -219,17 +219,26 @@ export function CharacterCreator({ onBack, onCreateCharacter }: CharacterCreator
             >
               <span className="text-sm font-['Press_Start_2P'] text-white">Back</span>
             </button>
-            <button
-              onClick={handleSubmit}
-              disabled={!playerName.trim()}
-              className="menu-button-bg px-6 py-2 rounded-lg border-2 hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              style={{
-                borderColor: theme.border,
-                background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
-              }}
-            >
-              <span className="text-sm font-['Press_Start_2P'] text-white">Start</span>
-            </button>
+            <div className="relative group">
+              <button
+                onClick={handleSubmit}
+                disabled={!playerName.trim() || !playerClass}
+                className="menu-button-bg px-6 py-2 rounded-lg border-2 hover:brightness-110 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{
+                  borderColor: theme.border,
+                  background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
+                }}
+              >
+                <span className="text-sm font-['Press_Start_2P'] text-white">Start</span>
+              </button>
+              {(!playerName.trim() || !playerClass) && (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none z-50 font-['Press_Start_2P']">
+                  {!playerName.trim() && !playerClass ? 'Enter name and select class' :
+                   !playerName.trim() ? 'Enter character name' :
+                   'Select a class'}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
