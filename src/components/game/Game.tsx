@@ -1,40 +1,60 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../state/store';
-import { useTheme } from '../theme/ThemeContext';
-import { playClickSound, playBackgroundMusic, updateMusicVolume } from '../utils/audio';
+import { RootState } from '../../state/store';
+import { useTheme } from '../../theme/ThemeContext';
+import { playClickSound, playBackgroundMusic, updateMusicVolume } from '../../utils/audio';
 import { InGameMenu } from './InGameMenu';
-import { Settings } from './Settings';
-import { DialogueBox } from './DialogueBox';
-import { Alert } from './Alert';
-import { SaveSlotManager } from './SaveSlotManager';
-import { saveGame, loadGame } from '../utils/saveLoad';
-import { createNewSave } from '../types/saveGame';
-import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../state/gameSlice';
-import { useNavigate } from 'react-router-dom';
-import KnightSprite from '../assets/sprites/character1.svg';
-import RangerSprite from '../assets/sprites/character2.svg';
-import MageSprite from '../assets/sprites/character3.svg';
-import { getVersionWithV } from '../utils/version';
+import { Settings } from '../menus/Settings';
+import { DialogueBox } from '../ui/DialogueBox';
+import { Alert } from '../ui/Alert';
+import { SaveSlotManager } from '../menus/SaveSlotManager';
+import { saveGame, loadGame } from '../../utils/saveLoad';
+import { createNewSave } from '../../types/saveGame';
+import { 
+  setPlayerName, 
+  setPlayerSprite, 
+  setPlayerClass, 
+  setPaused, 
+  setCurrentDialogue, 
+  setDialogueText,
+  setPlayerPet,
+  setHealth,
+  setStamina,
+  updateTime,
+  updateDate
+} from '../../state/gameSlice';
+import { Player } from './Player';
+import { getVersionWithV } from '../../utils/version';
+import { Inventory } from '../ui/Inventory';
+import { TimeDate } from '../ui/TimeDate';
+import { MenuButton } from '../ui/MenuButton';
+import { StatusBars } from '../ui/StatusBars';
+import { useGameLoop } from '../../hooks/useGameLoop';
 
-const CHARACTER_SPRITES = [
-  { id: 1, sprite: KnightSprite },
-  { id: 2, sprite: RangerSprite },
-  { id: 3, sprite: MageSprite }
-] as const;
+interface GameProps {
+  onExitToMenu: () => void;
+}
 
-export function Game() {
-  const navigate = useNavigate();
+export function Game({ onExitToMenu }: GameProps) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
-  const playerName = useSelector((state: RootState) => state.game.playerName);
-  const playerSprite = useSelector((state: RootState) => state.game.playerSprite);
-  const playerClass = useSelector((state: RootState) => state.game.playerClass);
-  const isPaused = useSelector((state: RootState) => state.game.isPaused);
-  const currentDialogue = useSelector((state: RootState) => state.game.currentDialogue);
-  const dialogueText = useSelector((state: RootState) => state.game.dialogueText);
+  const { 
+    playerName, 
+    playerSprite, 
+    playerClass,
+    playerPet,
+    time,
+    date,
+    health,
+    maxHealth,
+    stamina,
+    maxStamina,
+    currentDialogue,
+    dialogueText,
+    isPaused
+  } = useSelector((state: RootState) => state.game);
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showSaveSlots, setShowSaveSlots] = useState(false);
@@ -46,6 +66,9 @@ export function Game() {
     'With no items or memory of how you got here.'
   ];
 
+  // Initialize game loop
+  const { isPaused: gameLoopPaused, pause, resume } = useGameLoop();
+
   // Handle keyboard events
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -56,6 +79,11 @@ export function Game() {
           handleSaveSlotsBack();
         } else {
           setShowMenu(!showMenu);
+          if (!showMenu) {
+            pause();
+          } else {
+            resume();
+          }
           playClickSound(soundEnabled);
         }
       }
@@ -63,12 +91,16 @@ export function Game() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showMenu, showSettings, showSaveSlots, soundEnabled]);
+  }, [showMenu, showSettings, showSaveSlots, soundEnabled, pause, resume]);
 
   // Update pause state when menu visibility changes
   useEffect(() => {
-    dispatch(setPaused(showMenu || showSettings || showSaveSlots));
-  }, [showMenu, showSettings, showSaveSlots, dispatch]);
+    if (showMenu || showSettings || showSaveSlots) {
+      pause();
+    } else {
+      resume();
+    }
+  }, [showMenu, showSettings, showSaveSlots, pause, resume]);
 
   useEffect(() => {
     // Start first dialogue after a short delay
@@ -140,20 +172,27 @@ export function Game() {
     setShowMenu(false);
   };
 
-  const handleSaveSlotSelect = (slotId: number) => {
+  const handleSaveSlotSelect = async (slotId: number) => {
     if (saveSlotMode === 'save') {
       try {
         const saveData = createNewSave(
           playerName,
           playerSprite,
-          playerClass
+          playerClass,
+          playerPet,
+          time,
+          date,
+          health,
+          maxHealth,
+          stamina,
+          maxStamina
         );
         
         // Add current game progress
         saveData.currentDialogue = currentDialogue;
         
-        // Save to localStorage
-        saveGame(saveData, slotId);
+        // Save to storage
+        await saveGame(saveData, slotId);
         
         setAlert({ message: 'Game saved successfully!', type: 'success' });
         playClickSound(soundEnabled);
@@ -164,7 +203,7 @@ export function Game() {
       }
     } else {
       try {
-        const saveData = loadGame(slotId);
+        const saveData = await loadGame(slotId);
         if (!saveData) {
           setAlert({ message: 'No save data found', type: 'error' });
           return;
@@ -174,6 +213,15 @@ export function Game() {
         dispatch(setPlayerName(saveData.playerName));
         dispatch(setPlayerSprite(saveData.playerSprite));
         dispatch(setPlayerClass(saveData.playerClass));
+        dispatch(setPlayerPet(saveData.playerPet));
+        
+        // Load time and date
+        dispatch(updateTime(saveData.time));
+        dispatch(updateDate(saveData.date));
+        
+        // Load health and stamina
+        dispatch(setHealth(saveData.health));
+        dispatch(setStamina(saveData.stamina));
         
         // Set dialogue progress
         dispatch(setCurrentDialogue(saveData.currentDialogue));
@@ -201,67 +249,27 @@ export function Game() {
     setShowMenu(true);
   };
 
-  const handleOpenMenu = () => {
-    playClickSound(soundEnabled);
-    setShowMenu(true);
-  };
-
   const handleExitGame = () => {
     playClickSound(soundEnabled);
-    navigate('/');
+    onExitToMenu();
+  };
+
+  const handleMenuClick = () => {
+    playClickSound(soundEnabled);
+    setShowMenu(!showMenu);
   };
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-start min-h-screen h-screen w-full p-2 bg-[#2A1810]">
-      {alert && (
-        <Alert
-          message={alert.message}
-          type={alert.type}
-          onClose={() => setAlert(null)}
-        />
-      )}
-
-      {/* Game Header */}
-      <div className="w-full max-w-[1200px] flex items-center justify-between mb-8 p-4 settings-row-bg rounded-lg">
-        <div className="flex items-center gap-4">
-          <button
-            onClick={handleOpenMenu}
-            className="text-white hover:opacity-80 transition-opacity px-4 py-2 rounded-lg bg-[#8B4513] hover:bg-[#A0522D]"
-          >
-            Menu
-          </button>
-          <div className="w-[48px] h-[48px] bg-[#2A1810] rounded-lg border-2 border-[#8B4513] flex items-center justify-center">
-            <img 
-              src={CHARACTER_SPRITES[playerSprite - 1].sprite}
-              alt="Player" 
-              className="w-full h-full"
-            />
-          </div>
-          <div className="flex flex-col">
-            <div className="text-sm font-['Press_Start_2P'] text-white">
-              {playerName}
-            </div>
-            <div className="text-xs font-['Press_Start_2P'] text-white/70">
-              {playerClass}
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-4">
-          {/* Add game stats/resources here */}
-        </div>
-      </div>
-
-      {/* Main Game Area - Cave Spawn */}
+    <div className="relative w-full h-full">
+      {/* Cave Environment */}
       <div 
-        className="w-full max-w-[1200px] flex-1 settings-container-bg rounded-lg p-4 relative overflow-hidden"
+        className={`fixed inset-0 ${isPaused ? 'blur-sm' : ''}`}
         style={{
-          borderColor: theme.border,
           background: `linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%)`,
           boxShadow: 'inset 0 0 50px rgba(0,0,0,0.5)'
         }}
       >
-        {/* Cave Environment */}
+        {/* Cave Details */}
         <div className="absolute inset-0 opacity-20">
           {[...Array(20)].map((_, i) => (
             <div
@@ -278,69 +286,81 @@ export function Game() {
           ))}
         </div>
 
-        {/* Player Character */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <div 
-            className="w-[196px] h-[196px] rounded-lg flex items-center justify-center"
-            style={{
-              background: `${theme.secondary}40`,
-              borderColor: theme.border,
-              filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.7))'
-            }}
-          >
-            <img 
-              src={CHARACTER_SPRITES[playerSprite - 1].sprite}
-              alt="Player"
-              className="w-[180px] h-[180px] pixelated"
-              style={{
-                imageRendering: 'pixelated'
-              }}
-            />
-          </div>
+        {/* Player */}
+        <div className={isPaused ? 'pointer-events-none' : ''}>
+          <Player />
         </div>
+      </div>
 
-        {/* Dialogue Box */}
-        {dialogueText && (
+      {/* Menu Button */}
+      <div className="fixed top-4 left-4 z-[70] pointer-events-auto">
+        <MenuButton onClick={handleMenuClick} />
+      </div>
+
+      {/* Time and Date */}
+      <div className="fixed top-4 right-4 z-[70] pointer-events-auto">
+        <TimeDate />
+      </div>
+
+      {/* Inventory */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 z-[70] pointer-events-auto">
+        <Inventory />
+      </div>
+
+      {/* Status Bars */}
+      <div className="fixed bottom-4 right-4 z-[70] pointer-events-auto">
+        <StatusBars />
+      </div>
+
+      {/* Menu Layer */}
+      <div className="fixed inset-0 z-[60]">
+        <div className="relative w-full h-full flex items-center justify-center">
+          {showMenu && (
+            <InGameMenu
+              onClose={handleCloseMenu}
+              onSettings={handleSettings}
+              onSave={handleSave}
+              onLoad={handleLoad}
+              onExit={handleExitGame}
+            />
+          )}
+
+          {showSettings && (
+            <Settings onBack={handleCloseSettings} />
+          )}
+
+          {showSaveSlots && (
+            <SaveSlotManager
+              onBack={handleSaveSlotsBack}
+              onSelectSlot={handleSaveSlotSelect}
+              mode={saveSlotMode}
+              title={saveSlotMode === 'save' ? 'Save Game' : 'Load Game'}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Alert Layer */}
+      {alert && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center pointer-events-auto">
+          <Alert
+            message={alert.message}
+            type={alert.type}
+            onClose={() => setAlert(null)}
+          />
+        </div>
+      )}
+
+      {/* Dialogue Layer */}
+      {currentDialogue >= 0 && dialogueText && (
+        <div className="fixed inset-x-0 bottom-24 z-[70] flex justify-center items-center pointer-events-auto">
           <DialogueBox
             text={dialogueText}
             onNext={handleNextDialogue}
+            isPaused={isPaused}
           />
-        )}
-      </div>
-
-      {/* Menus */}
-      {showMenu && (
-        <InGameMenu
-          onClose={handleCloseMenu}
-          onSettings={handleSettings}
-          onSave={handleSave}
-          onLoad={handleLoad}
-          onExit={handleExitGame}
-        />
+        </div>
       )}
-
-      {showSettings && (
-        <Settings onBack={handleCloseSettings} />
-      )}
-
-      {showSaveSlots && (
-        <SaveSlotManager
-          mode={saveSlotMode}
-          onSelectSlot={handleSaveSlotSelect}
-          onBack={handleSaveSlotsBack}
-          title={saveSlotMode === 'save' ? 'Save Game' : 'Load Game'}
-        />
-      )}
-
-      {/* Version number */}
-      <div 
-        className="absolute bottom-4 left-4 text-white font-['Press_Start_2P'] text-xs"
-        style={{
-          textShadow: `2px 2px 0px ${theme.primary}, 2px 2px 4px rgba(0, 0, 0, 0.8)`
-        }}
-      >
-        {getVersionWithV()}
-      </div>
     </div>
   );
 } 

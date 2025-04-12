@@ -1,14 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GameTime, GameDate } from '../utils/calendar';
+import { gameConfig } from '../config/gameConfig';
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  quantity: number;
+  icon: string;
+}
 
 export interface GameState {
   playerName: string;
   playerSprite: number;
   playerClass: string;
   playerPet: string;
-  location: 'menu' | 'cave' | 'forest' | 'town';
+  location: string;
+  inventory: InventoryItem[];
+  time: GameTime;
+  date: GameDate;
+  health: number;
+  maxHealth: number;
+  stamina: number;
+  maxStamina: number;
   isPaused: boolean;
   currentDialogue: number;
   dialogueText: string;
+  playerPosition: {
+    x: number;
+    y: number;
+  };
+  playerDirection: 'up' | 'down' | 'left' | 'right';
+  isMoving: boolean;
 }
 
 const initialState: GameState = {
@@ -16,10 +38,23 @@ const initialState: GameState = {
   playerSprite: 1,
   playerClass: '',
   playerPet: 'cat',
-  location: 'menu',
+  location: 'cave',
+  inventory: [],
+  time: gameConfig.time.initialTime,
+  date: gameConfig.time.initialDate,
+  health: 100,
+  maxHealth: 100,
+  stamina: 100,
+  maxStamina: 100,
   isPaused: false,
-  currentDialogue: 0,
-  dialogueText: ''
+  currentDialogue: -1,
+  dialogueText: '',
+  playerPosition: {
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2
+  },
+  playerDirection: 'down',
+  isMoving: false
 };
 
 const gameSlice = createSlice({
@@ -38,8 +73,31 @@ const gameSlice = createSlice({
     setPlayerPet: (state, action: PayloadAction<string>) => {
       state.playerPet = action.payload;
     },
-    setLocation: (state, action: PayloadAction<GameState['location']>) => {
+    setLocation: (state, action: PayloadAction<string>) => {
       state.location = action.payload;
+    },
+    addInventoryItem: (state, action: PayloadAction<InventoryItem>) => {
+      const existingItem = state.inventory.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        existingItem.quantity += action.payload.quantity;
+      } else {
+        state.inventory.push(action.payload);
+      }
+    },
+    removeInventoryItem: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
+      const existingItem = state.inventory.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        existingItem.quantity -= action.payload.quantity;
+        if (existingItem.quantity <= 0) {
+          state.inventory = state.inventory.filter(item => item.id !== action.payload.id);
+        }
+      }
+    },
+    setHealth: (state, action: PayloadAction<number>) => {
+      state.health = Math.max(0, Math.min(state.maxHealth, action.payload));
+    },
+    setStamina: (state, action: PayloadAction<number>) => {
+      state.stamina = Math.max(0, Math.min(state.maxStamina, action.payload));
     },
     setPaused: (state, action: PayloadAction<boolean>) => {
       state.isPaused = action.payload;
@@ -49,18 +107,43 @@ const gameSlice = createSlice({
     },
     setDialogueText: (state, action: PayloadAction<string>) => {
       state.dialogueText = action.payload;
+    },
+    setPlayerPosition: (state, action: PayloadAction<{ x: number; y: number }>) => {
+      state.playerPosition = action.payload;
+    },
+    setPlayerDirection: (state, action: PayloadAction<'up' | 'down' | 'left' | 'right'>) => {
+      state.playerDirection = action.payload;
+    },
+    setIsMoving: (state, action: PayloadAction<boolean>) => {
+      state.isMoving = action.payload;
+    },
+    updateTime: (state, action: PayloadAction<GameTime>) => {
+      state.time = action.payload;
+    },
+    updateDate: (state, action: PayloadAction<GameDate>) => {
+      state.date = action.payload;
     }
   }
 });
 
-export const { 
-  setPlayerName, 
-  setPlayerSprite, 
-  setPlayerClass, 
+export const {
+  setPlayerName,
+  setPlayerSprite,
+  setPlayerClass,
   setPlayerPet,
-  setLocation, 
+  setLocation,
+  addInventoryItem,
+  removeInventoryItem,
+  setHealth,
+  setStamina,
   setPaused,
   setCurrentDialogue,
-  setDialogueText
+  setDialogueText,
+  setPlayerPosition,
+  setPlayerDirection,
+  setIsMoving,
+  updateTime,
+  updateDate
 } = gameSlice.actions;
+
 export default gameSlice.reducer; 

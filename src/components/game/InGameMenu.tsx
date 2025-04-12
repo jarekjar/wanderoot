@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
-import { RootState } from '../state/store';
-import { useTheme } from '../theme/ThemeContext';
-import { playClickSound } from '../utils/audio';
-import '../styles/background.css';
-import '../styles/menu.css';
+import { RootState } from '../../state/store';
+import { useTheme } from '../../theme/ThemeContext';
+import { playClickSound } from '../../utils/audio';
+import '../../styles/background.css';
+import '../../styles/menu.css';
 
 interface InGameMenuProps {
   onClose: () => void;
@@ -16,6 +16,11 @@ interface InGameMenuProps {
 export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGameMenuProps) {
   const theme = useTheme();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
+
+  const handleButtonClick = (action: () => void) => {
+    playClickSound(soundEnabled);
+    action();
+  };
 
   const menuButtonClass = `
     menu-button-bg
@@ -34,9 +39,11 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
   return (
     <div 
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={() => {
-        playClickSound(soundEnabled);
-        onClose();
+      onClick={(e) => {
+        // Only trigger if clicking the backdrop directly
+        if (e.target === e.currentTarget) {
+          handleButtonClick(onClose);
+        }
       }}
     >
       <div 
@@ -57,7 +64,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
 
         {/* Menu Container */}
         <div 
-          className="p-6 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-full max-w-[800px] menu-slide-up"
+          className="p-6 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-[400px] menu-slide-up"
           style={{
             borderColor: theme.border,
             background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -65,11 +72,8 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
         >
           <div className="flex flex-col gap-4">
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onClose();
-              }}
-              className={menuButtonClass}
+              onClick={() => handleButtonClick(onClose)}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -79,11 +83,8 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onSettings();
-              }}
-              className={menuButtonClass}
+              onClick={() => handleButtonClick(onSettings)}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -93,11 +94,8 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onSave();
-              }}
-              className={menuButtonClass}
+              onClick={() => handleButtonClick(onSave)}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -107,11 +105,8 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onLoad();
-              }}
-              className={menuButtonClass}
+              onClick={() => handleButtonClick(onLoad)}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
@@ -121,11 +116,8 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
             </button>
 
             <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onExit();
-              }}
-              className={menuButtonClass}
+              onClick={() => handleButtonClick(onExit)}
+              className={`${menuButtonClass} px-8`}
               style={{
                 borderColor: theme.border,
                 background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
