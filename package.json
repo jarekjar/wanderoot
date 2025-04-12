@@ -15,7 +15,13 @@
       "output": "release"
     },
     "win": {
-      "target": ["portable", "dir"]
+      "target": [
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "${productName}-win32-${arch}-portable.${ext}"
     },
     "files": [
       "dist/**/*",
@@ -26,16 +32,13 @@
       {
         "from": "public/assets",
         "to": "assets",
-        "filter": ["**/*", "!**/*.{mp3,wav}"]
-      },
-      {
-        "from": "public/assets/audio",
-        "to": "assets/audio",
-        "filter": ["**/*.{mp3,wav}"]
+        "filter": ["**/*"]
       }
     ],
     "asar": true,
-    "asarUnpack": ["assets/audio/*"]
+    "asarUnpack": [
+      "assets/**/*"
+    ]
   },
   "scripts": {
     "dev": "vite",

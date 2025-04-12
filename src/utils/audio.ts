@@ -7,7 +7,9 @@ const getAssetPath = (path: string) => {
     return path;
   }
   // In production, use the extraResources path
-  return window.electron.getAssetPath(path.replace('/assets/', ''));
+  // Remove the leading slash if it exists and keep the full path structure
+  const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
+  return window.electron.getAssetPath(normalizedPath);
 };
 
 export const getCurrentTrack = () => currentTrack;

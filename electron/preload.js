@@ -14,13 +14,8 @@ contextBridge.exposeInMainWorld(
         return path.join(process.cwd(), 'public', cleanPath);
       }
       
-      // In production, audio files are unpacked (due to asar limitations)
-      if (cleanPath.includes('.mp3') || cleanPath.includes('.wav')) {
-        return path.join(process.resourcesPath, cleanPath);
-      }
-      
-      // Other assets are in the asar archive
-      return path.join(process.resourcesPath, 'assets', cleanPath.replace('assets/', ''));
+      // In production, all assets are in the resources directory
+      return path.join(process.resourcesPath, cleanPath);
     }
   }
 ); 
