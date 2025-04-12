@@ -105,147 +105,149 @@ export function Settings({ onBack }: SettingsProps) {
   `.replace(/\s+/g, ' ').trim();
 
   return (
-    <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-      {/* Title */}
-      <div className="mb-8 sm:mb-12">
-        <h1 
-          className="text-4xl sm:text-5xl font-['Press_Start_2P'] text-white entrance-animation"
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+      <div className="relative z-10 flex flex-col items-center justify-center px-4">
+        {/* Title */}
+        <div className="mb-8">
+          <h1 
+            className="text-4xl font-['Press_Start_2P'] text-white entrance-animation"
+            style={{
+              textShadow: `4px 4px 0px ${theme.primary}, 4px 4px 4px rgba(0, 0, 0, 0.8)`
+            }}
+          >
+            Settings
+          </h1>
+        </div>
+
+        {/* Settings Container */}
+        <div 
+          className="p-4 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-full max-w-[500px] menu-slide-up"
           style={{
-            textShadow: `4px 4px 0px ${theme.primary}, 4px 4px 4px rgba(0, 0, 0, 0.8)`
+            borderColor: theme.border,
+            background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
           }}
         >
-          Settings
-        </h1>
-      </div>
-
-      {/* Settings Container */}
-      <div 
-        className="p-4 sm:p-6 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-full max-w-[500px] menu-slide-up"
-        style={{
-          borderColor: theme.border,
-          background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
-        }}
-      >
-        <div className="flex flex-col gap-4">
-          {/* Sound Toggle */}
-          <div className={settingRowClass}>
-            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
-              Sound
-            </span>
-            <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                dispatch(setSoundEnabled(!soundEnabled));
-              }}
-              className="text-xl sm:text-2xl cursor-pointer hover:opacity-80 transition-opacity mb-[6px]"
-            >
-              <span className="brightness-[1.2] contrast-[1.1]">
-                {soundEnabled ? '🔊' : '🔇'}
+          <div className="flex flex-col gap-4">
+            {/* Sound Toggle */}
+            <div className={settingRowClass}>
+              <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
+                Sound
               </span>
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  playClickSound(soundEnabled);
+                  dispatch(setSoundEnabled(!soundEnabled));
+                }}
+                className="text-xl sm:text-2xl cursor-pointer hover:opacity-80 transition-opacity mb-[6px]"
+              >
+                <span className="brightness-[1.2] contrast-[1.1]">
+                  {soundEnabled ? '🔊' : '🔇'}
+                </span>
+              </button>
+            </div>
 
-          {/* Music Volume */}
-          <div className={settingRowClass}>
-            <div className="flex items-center gap-8">
-              <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white whitespace-nowrap">
-                Music Volume
-              </span>
-              <div className="flex items-center gap-4">
-                <div className="relative w-[120px] sm:w-[160px] flex items-center">
-                  <div 
-                    className="absolute w-full h-[24px] menu-button-bg rounded-lg pointer-events-none border-2 overflow-hidden"
-                    style={{ borderColor: theme.border }}
-                  >
+            {/* Music Volume */}
+            <div className={settingRowClass}>
+              <div className="flex items-center gap-8">
+                <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white whitespace-nowrap">
+                  Music Volume
+                </span>
+                <div className="flex items-center gap-4">
+                  <div className="relative w-[120px] sm:w-[160px] flex items-center">
                     <div 
-                      className="h-full rounded-none transition-all duration-75 pointer-events-none"
-                      style={{ 
-                        width: `${Math.round(localVolume * 100)}%`,
-                        background: `linear-gradient(90deg, ${theme.primary} 0%, ${theme.primary} 100%)`
-                      }}
+                      className="absolute w-full h-[24px] menu-button-bg rounded-lg pointer-events-none border-2 overflow-hidden"
+                      style={{ borderColor: theme.border }}
+                    >
+                      <div 
+                        className="h-full rounded-none transition-all duration-75 pointer-events-none"
+                        style={{ 
+                          width: `${Math.round(localVolume * 100)}%`,
+                          background: `linear-gradient(90deg, ${theme.primary} 0%, ${theme.primary} 100%)`
+                        }}
+                      />
+                    </div>
+                    <input 
+                      type="range" 
+                      min="0" 
+                      max="100" 
+                      value={Math.round(localVolume * 100)}
+                      onChange={handleVolumeChange}
+                      onMouseDown={() => playClickSound(soundEnabled)}
+                      className="w-full appearance-none bg-transparent cursor-pointer relative z-10"
                     />
                   </div>
-                  <input 
-                    type="range" 
-                    min="0" 
-                    max="100" 
-                    value={Math.round(localVolume * 100)}
-                    onChange={handleVolumeChange}
-                    onMouseDown={() => playClickSound(soundEnabled)}
-                    className="w-full appearance-none bg-transparent cursor-pointer relative z-10"
-                  />
+                  <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white w-[40px] sm:w-[48px]">
+                    {Math.round(localVolume * 100)}%
+                  </span>
                 </div>
-                <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white w-[40px] sm:w-[48px]">
-                  {Math.round(localVolume * 100)}%
-                </span>
               </div>
             </div>
-          </div>
 
-          {/* Screen Mode */}
-          <div className={settingRowClass}>
-            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
-              Screen Mode
-            </span>
-            <div className="relative cursor-pointer">
-              <select 
-                className={selectClass}
-                value={screenMode}
-                onChange={handleScreenModeChange}
-                style={{ 
-                  cursor: 'pointer',
+            {/* Screen Mode */}
+            <div className={settingRowClass}>
+              <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
+                Screen Mode
+              </span>
+              <div className="relative cursor-pointer">
+                <select 
+                  className={selectClass}
+                  value={screenMode}
+                  onChange={handleScreenModeChange}
+                  style={{ 
+                    cursor: 'pointer',
+                    borderColor: theme.border,
+                    background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`,
+                  }}
+                >
+                  <option value="windowed" style={{ backgroundColor: theme.secondary }}>Windowed</option>
+                  <option value="fullscreen" style={{ backgroundColor: theme.secondary }}>Fullscreen</option>
+                </select>
+                <span className="absolute right-2 sm:right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[8px] sm:text-[10px]">▼</span>
+              </div>
+            </div>
+
+            {/* UI Theme */}
+            <div className={settingRowClass}>
+              <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
+                UI Theme
+              </span>
+              <div className="relative cursor-pointer">
+                <select 
+                  className={selectClass}
+                  value={uiTheme}
+                  onChange={handleThemeChange}
+                  style={{ 
+                    cursor: 'pointer',
+                    borderColor: theme.border,
+                    background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`,
+                  }}
+                >
+                  <option value="default" style={{ backgroundColor: theme.secondary }}>Default</option>
+                  <option value="brown" style={{ backgroundColor: theme.secondary }}>Brown</option>
+                  <option value="grey" style={{ backgroundColor: theme.secondary }}>Grey</option>
+                  <option value="yellow" style={{ backgroundColor: theme.secondary }}>Yellow</option>
+                  <option value="blue" style={{ backgroundColor: theme.secondary }}>Blue</option>
+                </select>
+                <span className="absolute right-2 sm:right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[8px] sm:text-[10px]">▼</span>
+              </div>
+            </div>
+
+            {/* Back Button */}
+            <div className="flex justify-center mt-8">
+              <button
+                onClick={() => {
+                  playClickSound(soundEnabled);
+                  onBack();
+                }}
+                className="menu-button-bg px-8 py-3 rounded-lg font-['Press_Start_2P'] text-white text-sm hover:brightness-110 transition-all duration-75"
+                style={{
                   borderColor: theme.border,
-                  background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`,
+                  background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
                 }}
               >
-                <option value="windowed" style={{ backgroundColor: theme.secondary }}>Windowed</option>
-                <option value="fullscreen" style={{ backgroundColor: theme.secondary }}>Fullscreen</option>
-              </select>
-              <span className="absolute right-2 sm:right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[8px] sm:text-[10px]">▼</span>
+                Back
+              </button>
             </div>
-          </div>
-
-          {/* UI Theme */}
-          <div className={settingRowClass}>
-            <span className="text-xs sm:text-sm font-['Press_Start_2P'] text-white">
-              UI Theme
-            </span>
-            <div className="relative cursor-pointer">
-              <select 
-                className={selectClass}
-                value={uiTheme}
-                onChange={handleThemeChange}
-                style={{ 
-                  cursor: 'pointer',
-                  borderColor: theme.border,
-                  background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`,
-                }}
-              >
-                <option value="default" style={{ backgroundColor: theme.secondary }}>Default</option>
-                <option value="brown" style={{ backgroundColor: theme.secondary }}>Brown</option>
-                <option value="grey" style={{ backgroundColor: theme.secondary }}>Grey</option>
-                <option value="yellow" style={{ backgroundColor: theme.secondary }}>Yellow</option>
-                <option value="blue" style={{ backgroundColor: theme.secondary }}>Blue</option>
-              </select>
-              <span className="absolute right-2 sm:right-2.5 top-[45%] -translate-y-1/2 text-white pointer-events-none text-[8px] sm:text-[10px]">▼</span>
-            </div>
-          </div>
-
-          {/* Back Button */}
-          <div className="flex justify-center mt-8">
-            <button
-              onClick={() => {
-                playClickSound(soundEnabled);
-                onBack();
-              }}
-              className="menu-button-bg px-8 py-3 rounded-lg font-['Press_Start_2P'] text-white text-sm hover:brightness-110 transition-all duration-75"
-              style={{
-                borderColor: theme.border,
-                background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
-              }}
-            >
-              Back
-            </button>
           </div>
         </div>
       </div>
