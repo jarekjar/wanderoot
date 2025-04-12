@@ -1,14 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-export interface GameState {
+interface GameState {
   playerName: string;
   playerSprite: number;
   playerClass: string;
   playerPet: string;
-  location: 'menu' | 'cave' | 'forest' | 'town';
   isPaused: boolean;
   currentDialogue: number;
   dialogueText: string;
+  location: string;
+  playerPosition: {
+    x: number;
+    y: number;
+  };
+  playerDirection: 'up' | 'down' | 'left' | 'right';
+  isMoving: boolean;
 }
 
 const initialState: GameState = {
@@ -16,10 +22,16 @@ const initialState: GameState = {
   playerSprite: 1,
   playerClass: '',
   playerPet: 'cat',
-  location: 'menu',
   isPaused: false,
-  currentDialogue: 0,
-  dialogueText: ''
+  currentDialogue: -1,
+  dialogueText: '',
+  location: 'cave',
+  playerPosition: {
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2
+  },
+  playerDirection: 'down',
+  isMoving: false
 };
 
 const gameSlice = createSlice({
@@ -38,9 +50,6 @@ const gameSlice = createSlice({
     setPlayerPet: (state, action: PayloadAction<string>) => {
       state.playerPet = action.payload;
     },
-    setLocation: (state, action: PayloadAction<GameState['location']>) => {
-      state.location = action.payload;
-    },
     setPaused: (state, action: PayloadAction<boolean>) => {
       state.isPaused = action.payload;
     },
@@ -49,18 +58,34 @@ const gameSlice = createSlice({
     },
     setDialogueText: (state, action: PayloadAction<string>) => {
       state.dialogueText = action.payload;
+    },
+    setLocation: (state, action: PayloadAction<string>) => {
+      state.location = action.payload;
+    },
+    setPlayerPosition: (state, action: PayloadAction<{ x: number; y: number }>) => {
+      state.playerPosition = action.payload;
+    },
+    setPlayerDirection: (state, action: PayloadAction<'up' | 'down' | 'left' | 'right'>) => {
+      state.playerDirection = action.payload;
+    },
+    setIsMoving: (state, action: PayloadAction<boolean>) => {
+      state.isMoving = action.payload;
     }
   }
 });
 
-export const { 
-  setPlayerName, 
-  setPlayerSprite, 
-  setPlayerClass, 
+export const {
+  setPlayerName,
+  setPlayerSprite,
+  setPlayerClass,
   setPlayerPet,
-  setLocation, 
   setPaused,
   setCurrentDialogue,
-  setDialogueText
+  setDialogueText,
+  setLocation,
+  setPlayerPosition,
+  setPlayerDirection,
+  setIsMoving
 } = gameSlice.actions;
+
 export default gameSlice.reducer; 

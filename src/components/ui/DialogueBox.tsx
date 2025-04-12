@@ -87,14 +87,16 @@ export function DialogueBox({ text, onNext, isPaused = false }: DialogueBoxProps
   
   return (
     <div 
-      className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[80%] max-w-[800px]"
+      className={`w-[80%] max-w-[800px] pointer-events-auto transition-all duration-200 ${isPaused ? 'blur-sm' : ''}`}
+      style={{ zIndex: 100 }}
     >
       <div 
         className="w-full p-6 rounded-lg relative"
         style={{
           background: `${theme.secondary}95`,
           border: `2px solid ${theme.border}`,
-          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)'
+          boxShadow: '0 4px 6px rgba(0, 0, 0, 0.3)',
+          opacity: isPaused ? 0.7 : 1
         }}
       >
         <div className="text-sm font-['Press_Start_2P'] text-white/90 mb-4 leading-relaxed">
@@ -102,13 +104,15 @@ export function DialogueBox({ text, onNext, isPaused = false }: DialogueBoxProps
         </div>
         <button
           onClick={handleClick}
-          className="absolute bottom-2 right-2 px-4 py-2 rounded"
+          disabled={isPaused}
+          className={`absolute bottom-2 right-2 px-4 py-2 rounded cursor-pointer hover:brightness-110 active:brightness-90 transition-all ${isPaused ? 'cursor-not-allowed opacity-50' : ''}`}
           style={{
             background: theme.primary,
             border: `2px solid ${theme.border}`,
+            zIndex: 101
           }}
         >
-          <span className="text-xs font-['Press_Start_2P'] text-white">
+          <span className="text-xs font-['Press_Start_2P'] text-white pointer-events-none">
             {isTyping ? 'Skip' : 'OK'}
           </span>
         </button>
