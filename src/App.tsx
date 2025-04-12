@@ -15,31 +15,16 @@ import { loadGame } from './utils/saveLoad';
 import { setPlayerName, setPlayerSprite, setPlayerClass } from './state/gameState';
 import './styles/background.css';
 import './styles/menu.css';
-import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { getVersionWithV } from './utils/version';
 
-// Redirect component to handle initial navigation
-function InitialRedirect() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    console.log(location.pathname);
-    if (location.pathname === '/') {
-      return;
-    }
-    navigate('/', { replace: true });
-  }, []);
-
-  return null;
-}
+type Screen = 'menu' | 'character' | 'load' | 'settings' | 'game';
 
 function AppContent() {
-  const navigate = useNavigate();
   const theme = useTheme();
   const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const dispatch = useDispatch();
+  const [currentScreen, setCurrentScreen] = useState<Screen>('menu');
 
   // Initialize music on mount
   useEffect(() => {
@@ -61,23 +46,23 @@ function AppContent() {
   }, [soundEnabled]);
 
   const handleNewGame = () => {
-    navigate('/character');
+    setCurrentScreen('character');
   };
 
   const handleLoadGame = () => {
-    navigate('/load');
+    setCurrentScreen('load');
   };
 
   const handleCreateCharacter = () => {
-    navigate('/game');
+    setCurrentScreen('game');
   };
 
   const handleOpenSettings = () => {
-    navigate('/settings');
+    setCurrentScreen('settings');
   };
 
   const handleBackToMenu = () => {
-    navigate('/');
+    setCurrentScreen('menu');
   };
 
   const handleLoadSlotSelect = async (slotId: number) => {
@@ -94,54 +79,63 @@ function AppContent() {
       dispatch(setPlayerClass(saveData.playerClass));
       
       // Switch to game screen
-      navigate('/game');
+      setCurrentScreen('game');
     } catch (error) {
       console.error('Failed to load game:', error);
     }
   };
 
+  const renderScreen = () => {
+    switch (currentScreen) {
+      case 'menu':
+        return (
+          <>
+            <VolumeButton />
+            <MainMenu 
+              onNewGame={handleNewGame} 
+              onLoadGame={handleLoadGame}
+              onSettings={handleOpenSettings} 
+            />
+          </>
+        );
+      case 'character':
+        return (
+          <>
+            <VolumeButton />
+            <CharacterCreator onBack={handleBackToMenu} onCreateCharacter={handleCreateCharacter} />
+          </>
+        );
+      case 'load':
+        return (
+          <>
+            <VolumeButton />
+            <SaveSlotManager 
+              onBack={handleBackToMenu}
+              onSelectSlot={handleLoadSlotSelect}
+              mode="load"
+              title="Load Game"
+            />
+          </>
+        );
+      case 'settings':
+        return (
+          <>
+            <VolumeButton />
+            <Settings onBack={handleBackToMenu} />
+          </>
+        );
+      case 'game':
+        return <Game onExitToMenu={handleBackToMenu} />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <>
-      <InitialRedirect />
       <div className="main-menu-bg" />
       <div className="min-h-screen flex items-center justify-center relative">
-        <Routes>
-          <Route path="/" element={
-            <>
-              <VolumeButton />
-              <MainMenu 
-                onNewGame={handleNewGame} 
-                onLoadGame={handleLoadGame}
-                onSettings={handleOpenSettings} 
-              />
-            </>
-          } />
-          <Route path="/character" element={
-            <>
-              <VolumeButton />
-              <CharacterCreator onBack={handleBackToMenu} onCreateCharacter={handleCreateCharacter} />
-            </>
-          } />
-          <Route path="/load" element={
-            <>
-              <VolumeButton />
-              <SaveSlotManager 
-                onBack={handleBackToMenu}
-                onSelectSlot={handleLoadSlotSelect}
-                mode="load"
-                title="Load Game"
-              />
-            </>
-          } />
-          <Route path="/settings" element={
-            <>
-              <VolumeButton />
-              <Settings onBack={handleBackToMenu} />
-            </>
-          } />
-          <Route path="/game" element={<Game />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+        {renderScreen()}
         
         {/* Version number - persistent across all screens */}
         <div 
@@ -160,11 +154,9 @@ function AppContent() {
 export default function App() {
   return (
     <Provider store={store}>
-      <HashRouter>
-        <ThemeProvider>
-          <AppContent />
-        </ThemeProvider>
-      </HashRouter>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
     </Provider>
   );
 } 

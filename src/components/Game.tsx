@@ -11,7 +11,6 @@ import { SaveSlotManager } from './SaveSlotManager';
 import { saveGame, loadGame } from '../utils/saveLoad';
 import { createNewSave } from '../types/saveGame';
 import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../state/gameSlice';
-import { useNavigate } from 'react-router-dom';
 import KnightSprite from '../assets/sprites/character1.svg';
 import RangerSprite from '../assets/sprites/character2.svg';
 import MageSprite from '../assets/sprites/character3.svg';
@@ -23,8 +22,11 @@ const CHARACTER_SPRITES = {
   3: MageSprite
 } as const;
 
-export function Game() {
-  const navigate = useNavigate();
+interface GameProps {
+  onExitToMenu: () => void;
+}
+
+export function Game({ onExitToMenu }: GameProps) {
   const theme = useTheme();
   const dispatch = useDispatch();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
@@ -211,7 +213,7 @@ export function Game() {
 
   const handleExitGame = () => {
     playClickSound(soundEnabled);
-    navigate('/');
+    onExitToMenu();
   };
 
   return (
