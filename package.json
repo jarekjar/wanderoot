@@ -13,18 +13,25 @@
     "appId": "com.wanderoot.app",
     "productName": "Wanderoot",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "src/assets"
     },
     "win": {
       "target": [
         {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
+          "target": "nsis",
+          "arch": ["x64"]
         }
       ],
-      "artifactName": "${productName}-win32-${arch}-portable.${ext}"
+      "icon": "buildResources/icon.png",
+      "artifactName": "${productName}-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Wanderoot"
     },
     "files": [
       "dist/**/*",

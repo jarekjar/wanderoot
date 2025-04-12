@@ -38,27 +38,16 @@ function AppContent() {
   const theme = useTheme();
   const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
-  const [hasInteracted, setHasInteracted] = useState(false);
   const [musicStarted, setMusicStarted] = useState(false);
   const dispatch = useDispatch();
 
-  // Start music after user interaction
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      setHasInteracted(true);
-      document.removeEventListener('click', handleFirstInteraction);
-    };
-    document.addEventListener('click', handleFirstInteraction);
-    return () => document.removeEventListener('click', handleFirstInteraction);
-  }, []);
-
   // Initialize music once after first interaction
   useEffect(() => {
-    if (hasInteracted && !musicStarted && soundEnabled) {
+    if (!musicStarted && soundEnabled) {
       playBackgroundMusic(musicVolume, soundEnabled);
       setMusicStarted(true);
     }
-  }, [hasInteracted, musicStarted, soundEnabled]);
+  }, [musicStarted, soundEnabled]);
 
   // Handle volume changes
   useEffect(() => {
