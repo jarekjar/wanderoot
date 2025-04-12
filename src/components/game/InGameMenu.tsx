@@ -1,9 +1,9 @@
 import { useSelector } from 'react-redux';
-import { RootState } from '../state/store';
-import { useTheme } from '../theme/ThemeContext';
-import { playClickSound } from '../utils/audio';
-import '../styles/background.css';
-import '../styles/menu.css';
+import { RootState } from '../../state/store';
+import { useTheme } from '../../theme/ThemeContext';
+import { playClickSound } from '../../utils/audio';
+import '../../styles/background.css';
+import '../../styles/menu.css';
 
 interface InGameMenuProps {
   onClose: () => void;

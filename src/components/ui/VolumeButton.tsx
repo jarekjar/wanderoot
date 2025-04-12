@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../state/store';
-import { setSoundEnabled } from '../state/settingsState';
-import { playClickSound } from '../utils/audio';
-import { useTheme } from '../theme/ThemeContext';
-import '../styles/menu.css';
+import { RootState } from '../../state/store';
+import { setSoundEnabled } from '../../state/settingsState';
+import { playClickSound } from '../../utils/audio';
+import { useTheme } from '../../theme/ThemeContext';
+import '../../styles/menu.css';
 
 export function VolumeButton() {
   const dispatch = useDispatch();

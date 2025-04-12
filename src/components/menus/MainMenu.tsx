@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../state/store';
-import { setSoundEnabled } from '../state/settingsState';
-import { playClickSound } from '../utils/audio';
-import { useTheme } from '../theme/ThemeContext';
-import '../styles/background.css';
-import '../styles/menu.css';
+import { RootState } from '../../state/store';
+import { setSoundEnabled } from '../../state/settingsState';
+import { playClickSound } from '../../utils/audio';
+import { useTheme } from '../../theme/ThemeContext';
+import '../../styles/background.css';
+import '../../styles/menu.css';
 
 interface MainMenuProps {
   onNewGame: () => void;
@@ -12,7 +12,7 @@ interface MainMenuProps {
   onSettings: () => void;
 }
 
-function MainMenu({ onNewGame, onLoadGame, onSettings }: MainMenuProps) {
+export function MainMenu({ onNewGame, onLoadGame, onSettings }: MainMenuProps) {
   const dispatch = useDispatch();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const theme = useTheme();
@@ -90,6 +90,4 @@ function MainMenu({ onNewGame, onLoadGame, onSettings }: MainMenuProps) {
       </div>
     </div>
   );
-}
-
-export default MainMenu; 
+} 

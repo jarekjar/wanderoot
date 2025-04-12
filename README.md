@@ -71,20 +71,32 @@ npm run pack:mac
 npm run electron-pack
 ```
 
-### Project Structure
+## 🏗️ Project Structure
 
 ```
 wanderoot/
-├── src/               # Source code
-│   ├── assets/       # Game assets (sprites, audio)
-│   ├── components/   # React components
-│   ├── state/        # Redux store and slices
-│   ├── styles/       # CSS styles
-│   ├── theme/        # Theme configuration
-│   ├── types/        # TypeScript type definitions
-│   └── utils/        # Utility functions
-├── electron/         # Electron main process
-└── public/          # Static assets
+├── electron/             # Electron main process files
+├── src/                  # Source code
+│   ├── assets/          # Game assets
+│   │   ├── sprites/     # Character and world sprites
+│   │   ├── audio/      # Music and sound effects
+│   │   └── images/     # UI and background images
+│   ├── components/      # React components
+│   │   ├── game/       # Game-specific components
+│   │   ├── ui/         # Reusable UI components
+│   │   └── menus/      # Menu screens and overlays
+│   ├── state/          # Redux store and slices
+│   │   ├── store.ts    # Redux store configuration
+│   │   ├── gameSlice.ts # Game state management
+│   │   └── settingsState.ts # Settings state management
+│   ├── styles/         # CSS and Tailwind styles
+│   ├── theme/          # Theme configuration
+│   ├── types/          # TypeScript type definitions
+│   └── utils/          # Utility functions
+│       ├── audio.ts    # Audio management
+│       ├── saveLoad.ts # Save/load functionality
+│       └── version.ts  # Version management
+└── dist/               # Production build output
 ```
 
 ## 🛠️ Built With
@@ -152,18 +164,6 @@ npm run electron-pack
 This generates:
 - A Windows installer in the `release` directory
 - Named format: `Wanderoot-Setup-x.x.x.exe`
-
-## 🏗️ Project Structure
-
-```
-wanderoot/
-├── electron/          # Electron main process files
-├── src/
-│   ├── components/   # React components
-│   ├── state/        # Redux store and slices
-│   └── utils/        # Utility functions
-└── dist/             # Production build output
-```
 
 ## 🔧 Technical Stack
 

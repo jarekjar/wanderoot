@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../state/store';
-import { setSoundEnabled, setMusicVolume, setScreenMode, setUITheme, type ScreenMode, type UITheme } from '../state/settingsState';
-import { playClickSound } from '../utils/audio';
+import { RootState } from '../../state/store';
+import { setSoundEnabled, setMusicVolume, setScreenMode, setUITheme, type ScreenMode, type UITheme } from '../../state/settingsState';
+import { playClickSound } from '../../utils/audio';
 import { useCallback, useState, useEffect } from 'react';
 import debounce from 'lodash/debounce';
-import { useTheme } from '../theme/ThemeContext';
-import '../styles/background.css';
-import '../styles/menu.css';
-import '../styles/range.css';
+import { useTheme } from '../../theme/ThemeContext';
+import '../../styles/background.css';
+import '../../styles/menu.css';
+import '../../styles/range.css';
 
 interface SettingsProps {
   onBack: () => void;

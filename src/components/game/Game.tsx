@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../state/store';
-import { useTheme } from '../theme/ThemeContext';
-import { playClickSound, playBackgroundMusic, updateMusicVolume } from '../utils/audio';
+import { RootState } from '../../state/store';
+import { useTheme } from '../../theme/ThemeContext';
+import { playClickSound, playBackgroundMusic, updateMusicVolume } from '../../utils/audio';
 import { InGameMenu } from './InGameMenu';
-import { Settings } from './Settings';
-import { DialogueBox } from './DialogueBox';
-import { Alert } from './Alert';
-import { SaveSlotManager } from './SaveSlotManager';
-import { saveGame, loadGame } from '../utils/saveLoad';
-import { createNewSave } from '../types/saveGame';
-import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../state/gameSlice';
-import KnightSprite from '../assets/sprites/character1.svg';
-import RangerSprite from '../assets/sprites/character2.svg';
-import MageSprite from '../assets/sprites/character3.svg';
-import { getVersionWithV } from '../utils/version';
+import { Settings } from '../menus/Settings';
+import { DialogueBox } from '../ui/DialogueBox';
+import { Alert } from '../ui/Alert';
+import { SaveSlotManager } from '../menus/SaveSlotManager';
+import { saveGame, loadGame } from '../../utils/saveLoad';
+import { createNewSave } from '../../types/saveGame';
+import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../../state/gameSlice';
+import KnightSprite from '../../assets/sprites/character1.svg';
+import RangerSprite from '../../assets/sprites/character2.svg';
+import MageSprite from '../../assets/sprites/character3.svg';
+import { getVersionWithV } from '../../utils/version';
 
 const CHARACTER_SPRITES = {
   1: KnightSprite,

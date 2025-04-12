@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../state/store';
-import { useTheme } from '../theme/ThemeContext';
+import { RootState } from '../../state/store';
+import { useTheme } from '../../theme/ThemeContext';
 
 interface DialogueBoxProps {
   text: string;

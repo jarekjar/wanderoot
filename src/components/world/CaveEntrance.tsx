@@ -1,7 +1,9 @@
-import { useTheme } from '../theme/ThemeContext';
-import { useSelector } from 'react-redux';
-import { RootState } from '../state/store';
-import { playClickSound } from '../utils/audio';
+import { useTheme } from '../../theme/ThemeContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../state/store';
+import { playClickSound } from '../../utils/audio';
+import { setLocation } from '../../state/gameSlice';
+import { useCallback } from 'react';
 
 interface CaveEntranceProps {
   onEnter: () => void;

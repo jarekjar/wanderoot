@@ -1,13 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setPlayerName, setPlayerSprite, setPlayerClass, setPlayerPet } from '../state/gameState';
-import { RootState } from '../state/store';
-import { useTheme } from '../theme/ThemeContext';
-import { playClickSound } from '../utils/audio';
-import '../styles/background.css';
-import '../styles/menu.css';
-import KnightSprite from '../assets/sprites/character1.svg';
-import RangerSprite from '../assets/sprites/character2.svg';
-import MageSprite from '../assets/sprites/character3.svg';
+import { setPlayerName, setPlayerSprite, setPlayerClass, setPlayerPet } from '../../state/gameSlice';
+import { RootState } from '../../state/store';
+import { useTheme } from '../../theme/ThemeContext';
+import { playClickSound } from '../../utils/audio';
+import '../../styles/background.css';
+import '../../styles/menu.css';
+import KnightSprite from '../../assets/sprites/character1.svg';
+import RangerSprite from '../../assets/sprites/character2.svg';
+import MageSprite from '../../assets/sprites/character3.svg';
 
 const CHARACTER_SPRITES = [
   { id: 1, sprite: KnightSprite },

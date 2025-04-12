@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './state/store';
-import MainMenu from './components/MainMenu';
-import { Settings } from './components/Settings';
-import { Game } from './components/Game';
-import { CharacterCreator } from './components/CharacterCreator';
-import { SaveSlotManager } from './components/SaveSlotManager';
-import { VolumeButton } from './components/VolumeButton';
+import { MainMenu, Settings, CharacterCreator, SaveSlotManager } from './components/menus';
+import { Game } from './components/game';
+import { VolumeButton } from './components/ui';
 import { ThemeProvider, useTheme } from './theme/ThemeContext';
 import { playBackgroundMusic, updateMusicVolume } from './utils/audio';
 import { useSelector, useDispatch } from 'react-redux';
