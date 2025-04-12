@@ -16,7 +16,7 @@ function Bar({ current, max, color, label, icon }: BarProps) {
   const percentage = (current / max) * 100;
   
   return (
-    <div className="flex flex-col items-center gap-2 mb-4 last:mb-0">
+    <div className="flex flex-col items-center gap-1">
       <img 
         src={icon} 
         alt={label}
@@ -32,7 +32,7 @@ function Bar({ current, max, color, label, icon }: BarProps) {
           }}
         />
       </div>
-      <span className="text-xs font-['Press_Start_2P'] text-white text-center -mt-1">
+      <span className="text-xs font-['Press_Start_2P'] text-white text-center">
         {current}
       </span>
     </div>
