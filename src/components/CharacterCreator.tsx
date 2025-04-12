@@ -5,9 +5,9 @@ import { useTheme } from '../theme/ThemeContext';
 import { playClickSound } from '../utils/audio';
 import '../styles/background.css';
 import '../styles/menu.css';
-import KnightSprite from '/assets/sprites/character1.svg';
-import RangerSprite from '/assets/sprites/character2.svg';
-import MageSprite from '/assets/sprites/character3.svg';
+import KnightSprite from '../assets/sprites/character1.svg';
+import RangerSprite from '../assets/sprites/character2.svg';
+import MageSprite from '../assets/sprites/character3.svg';
 
 const CHARACTER_SPRITES = [
   { id: 1, sprite: KnightSprite },

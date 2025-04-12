@@ -32,11 +32,10 @@ function createWindow() {
     height: 800,
     webPreferences: {
       nodeIntegration: false,
-      contextIsolation: true,
-      preload: path.join(rootDir, '/electron/preload.js'),
       webSecurity: isDev ? false : true,
       sandbox: false
-    }
+    },
+    icon: path.join(__dirname, '../src/assets/icon.png')
   });
 
   // Load the app

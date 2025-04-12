@@ -1,20 +1,15 @@
 let backgroundMusic: HTMLAudioElement | null = null;
 let currentTrack: string = '';
 
-const getAssetPath = (path: string) => {
-  // In development, use the public path
-  if (process.env.NODE_ENV === 'development') {
-    return path;
-  }
-  // In production, use the extraResources path
-  return window.electron.getAssetPath(path.replace('/assets/', ''));
-};
+import clickSound from '../assets/audio/fx/button-click-sound-effect.mp3';
+import menuMusic from '../assets/audio/morning-garden-acoustic-chill.mp3';
+import caveMusic from '../assets/audio/music/cave_ambience.wav';
 
 export const getCurrentTrack = () => currentTrack;
 
 export const playClickSound = (soundEnabled: boolean) => {
   if (soundEnabled) {
-    const audio = new Audio(getAssetPath('/assets/audio/fx/button-click-sound-effect.mp3'));
+    const audio = new Audio(clickSound);
     audio.volume = 0.25;
     audio.play().catch(error => {
       console.error('Error playing click sound:', error);
@@ -24,10 +19,10 @@ export const playClickSound = (soundEnabled: boolean) => {
 
 export const playBackgroundMusic = (musicVolume: number, soundEnabled: boolean, track: 'menu' | 'cave' | 'forest' | 'town' = 'menu') => {
   const trackPath = {
-    menu: getAssetPath('/assets/audio/morning-garden-acoustic-chill.mp3'),
-    cave: getAssetPath('/assets/audio/music/cave_ambience.wav'),
-    forest: getAssetPath('/assets/audio/music/cave_ambience.wav'), // Using cave ambience for forest for now
-    town: getAssetPath('/assets/audio/morning-garden-acoustic-chill.mp3') // Using menu music for town for now
+    menu: menuMusic,
+    cave: caveMusic,
+    forest: caveMusic, // Using cave ambience for forest for now
+    town: menuMusic // Using menu music for town for now
   };
 
   // First, ensure any existing music is stopped

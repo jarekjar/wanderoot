@@ -36,7 +36,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            release/Wanderoot-win32-x64-portable.exe
+            release/Wanderoot-Setup.exe
           draft: false
           prerelease: false
         env:
