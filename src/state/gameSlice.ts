@@ -1,21 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GameTime, GameDate } from '../utils/calendar';
+import { gameConfig } from '../config/gameConfig';
 
 export interface InventoryItem {
   id: string;
   name: string;
   quantity: number;
   icon: string;
-}
-
-export interface GameTime {
-  hour: number;
-  minute: number;
-}
-
-export interface GameDate {
-  year: number;
-  month: number;
-  day: number;
 }
 
 export interface GameState {
@@ -49,15 +40,8 @@ const initialState: GameState = {
   playerPet: 'cat',
   location: 'cave',
   inventory: [],
-  time: {
-    hour: 23,
-    minute: 30
-  },
-  date: {
-    year: 1995,
-    month: 7,
-    day: 4
-  },
+  time: gameConfig.time.initialTime,
+  date: gameConfig.time.initialDate,
   health: 100,
   maxHealth: 100,
   stamina: 100,
@@ -109,12 +93,6 @@ const gameSlice = createSlice({
         }
       }
     },
-    updateTime: (state, action: PayloadAction<GameTime>) => {
-      state.time = action.payload;
-    },
-    updateDate: (state, action: PayloadAction<GameDate>) => {
-      state.date = action.payload;
-    },
     setHealth: (state, action: PayloadAction<number>) => {
       state.health = Math.max(0, Math.min(state.maxHealth, action.payload));
     },
@@ -138,6 +116,12 @@ const gameSlice = createSlice({
     },
     setIsMoving: (state, action: PayloadAction<boolean>) => {
       state.isMoving = action.payload;
+    },
+    updateTime: (state, action: PayloadAction<GameTime>) => {
+      state.time = action.payload;
+    },
+    updateDate: (state, action: PayloadAction<GameDate>) => {
+      state.date = action.payload;
     }
   }
 });
@@ -150,8 +134,6 @@ export const {
   setLocation,
   addInventoryItem,
   removeInventoryItem,
-  updateTime,
-  updateDate,
   setHealth,
   setStamina,
   setPaused,
@@ -159,7 +141,9 @@ export const {
   setDialogueText,
   setPlayerPosition,
   setPlayerDirection,
-  setIsMoving
+  setIsMoving,
+  updateTime,
+  updateDate
 } = gameSlice.actions;
 
 export default gameSlice.reducer; 

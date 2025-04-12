@@ -29,6 +29,7 @@ import { Inventory } from '../ui/Inventory';
 import { TimeDate } from '../ui/TimeDate';
 import { MenuButton } from '../ui/MenuButton';
 import { StatusBars } from '../ui/StatusBars';
+import { useGameLoop } from '../../hooks/useGameLoop';
 
 interface GameProps {
   onExitToMenu: () => void;
@@ -65,6 +66,9 @@ export function Game({ onExitToMenu }: GameProps) {
     'With no items or memory of how you got here.'
   ];
 
+  // Initialize game loop
+  const { isPaused: gameLoopPaused, pause, resume } = useGameLoop();
+
   // Handle keyboard events
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -75,6 +79,11 @@ export function Game({ onExitToMenu }: GameProps) {
           handleSaveSlotsBack();
         } else {
           setShowMenu(!showMenu);
+          if (!showMenu) {
+            pause();
+          } else {
+            resume();
+          }
           playClickSound(soundEnabled);
         }
       }
@@ -82,12 +91,16 @@ export function Game({ onExitToMenu }: GameProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showMenu, showSettings, showSaveSlots, soundEnabled]);
+  }, [showMenu, showSettings, showSaveSlots, soundEnabled, pause, resume]);
 
   // Update pause state when menu visibility changes
   useEffect(() => {
-    dispatch(setPaused(showMenu || showSettings || showSaveSlots));
-  }, [showMenu, showSettings, showSaveSlots, dispatch]);
+    if (showMenu || showSettings || showSaveSlots) {
+      pause();
+    } else {
+      resume();
+    }
+  }, [showMenu, showSettings, showSaveSlots, pause, resume]);
 
   useEffect(() => {
     // Start first dialogue after a short delay

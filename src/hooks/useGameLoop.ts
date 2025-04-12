@@ -1,31 +1,60 @@
-import { useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../state/store';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../state/store';
+import { gameConfig } from '../config/gameConfig';
+import { GameTime, GameDate, incrementTime, incrementDate } from '../utils/calendar';
+import { updateTime, updateDate } from '../state/gameSlice';
 
-export const useGameLoop = (callback: () => void) => {
-  const isPaused = useSelector((state: RootState) => state.game.isPaused);
-  const frameRef = useRef<number | undefined>(undefined);
+export function useGameLoop() {
+  const dispatch = useDispatch<AppDispatch>();
+  const lastUpdateRef = useRef<number>(0);
+  const [isPaused, setIsPaused] = useState(false);
+  
+  // Get game state from Redux
+  const { time, date } = useSelector((state: RootState) => state.game);
 
   useEffect(() => {
-    let lastTime = 0;
-    
-    const animate = (currentTime: number) => {
-      if (!lastTime) lastTime = currentTime;
-      
-      if (!isPaused) {
-        callback();
+    let animationFrameId: number;
+    let lastTime = performance.now();
+
+    const gameLoop = (currentTime: number) => {
+      if (isPaused) {
+        animationFrameId = requestAnimationFrame(gameLoop);
+        return;
       }
-      
+
+      const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
-      frameRef.current = requestAnimationFrame(animate);
+
+      // Check if enough real time has passed for a game minute
+      if (currentTime - lastUpdateRef.current >= gameConfig.time.realMillisecondsPerGameMinute) {
+        lastUpdateRef.current = currentTime;
+
+        // Increment time by 10 minutes
+        const { time: newTime, dayIncremented } = incrementTime(time);
+        dispatch(updateTime(newTime));
+
+        // If day has incremented, update the date
+        if (dayIncremented) {
+          const newDate = incrementDate(date);
+          dispatch(updateDate(newDate));
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(gameLoop);
     };
 
-    frameRef.current = requestAnimationFrame(animate);
+    animationFrameId = requestAnimationFrame(gameLoop);
 
     return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
-      }
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [callback, isPaused]);
-}; 
+  }, [dispatch, isPaused, time, date]);
+
+  return {
+    isPaused,
+    pause: () => setIsPaused(true),
+    resume: () => setIsPaused(false),
+    togglePause: () => setIsPaused(prev => !prev)
+  };
+} 
