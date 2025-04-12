@@ -13,6 +13,10 @@ import { createNewSave } from '../../types/saveGame';
 import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../../state/gameSlice';
 import { Player } from './Player';
 import { getVersionWithV } from '../../utils/version';
+import { Inventory } from '../ui/Inventory';
+import { TimeDate } from '../ui/TimeDate';
+import { StatusBars } from '../ui/StatusBars';
+import { MenuButton } from '../ui/MenuButton';
 
 interface GameProps {
   onExitToMenu: () => void;
@@ -200,11 +204,16 @@ export function Game({ onExitToMenu }: GameProps) {
     onExitToMenu();
   };
 
+  const handleMenuClick = () => {
+    playClickSound(soundEnabled);
+    setShowMenu(!showMenu);
+  };
+
   return (
     <div className="relative w-full h-full">
       {/* Cave Environment */}
       <div 
-        className="fixed inset-0"
+        className={`fixed inset-0 ${isPaused ? 'blur-sm' : ''}`}
         style={{
           background: `linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%)`,
           boxShadow: 'inset 0 0 50px rgba(0,0,0,0.5)'
@@ -228,23 +237,29 @@ export function Game({ onExitToMenu }: GameProps) {
         </div>
 
         {/* Player */}
-        <Player />
+        <div className={isPaused ? 'pointer-events-none' : ''}>
+          <Player />
+        </div>
       </div>
 
-      {/* Game UI Layer */}
-      <div className="fixed inset-0 z-40">
-        {/* Interactive Elements Layer */}
-        <div className="relative w-full h-full">
-          {/* Version Number */}
-          <div 
-            className="absolute bottom-4 left-4 text-white font-['Press_Start_2P'] text-xs pointer-events-none"
-            style={{
-              textShadow: `2px 2px 0px ${theme.primary}, 2px 2px 4px rgba(0, 0, 0, 0.8)`
-            }}
-          >
-            {getVersionWithV()}
-          </div>
-        </div>
+      {/* Menu Button */}
+      <div className="fixed top-4 left-4 z-[70] pointer-events-auto">
+        <MenuButton onClick={handleMenuClick} />
+      </div>
+
+      {/* Time and Date */}
+      <div className="fixed top-4 right-4 z-[70] pointer-events-auto">
+        <TimeDate />
+      </div>
+
+      {/* Inventory */}
+      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-[70] pointer-events-auto">
+        <Inventory />
+      </div>
+
+      {/* Status Bars */}
+      <div className="fixed bottom-4 right-4 z-[70] pointer-events-auto">
+        <StatusBars />
       </div>
 
       {/* Menu Layer */}
@@ -277,7 +292,7 @@ export function Game({ onExitToMenu }: GameProps) {
 
       {/* Alert Layer */}
       {alert && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center pointer-events-auto">
           <Alert
             message={alert.message}
             type={alert.type}
@@ -286,9 +301,9 @@ export function Game({ onExitToMenu }: GameProps) {
         </div>
       )}
 
-      {/* Dialogue Layer - Highest Z-index */}
+      {/* Dialogue Layer */}
       {currentDialogue >= 0 && dialogueText && (
-        <div className={`fixed inset-x-0 bottom-24 z-[70] flex justify-center items-center ${isPaused ? 'pointer-events-none' : 'pointer-events-auto'}`}>
+        <div className="fixed inset-x-0 bottom-24 z-[70] flex justify-center items-center pointer-events-auto">
           <DialogueBox
             text={dialogueText}
             onNext={handleNextDialogue}

@@ -1,14 +1,39 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface GameState {
+export interface InventoryItem {
+  id: string;
+  name: string;
+  quantity: number;
+  icon: string;
+}
+
+export interface GameTime {
+  hour: number;
+  minute: number;
+}
+
+export interface GameDate {
+  year: number;
+  month: number;
+  day: number;
+}
+
+export interface GameState {
   playerName: string;
   playerSprite: number;
   playerClass: string;
   playerPet: string;
+  location: string;
+  inventory: InventoryItem[];
+  time: GameTime;
+  date: GameDate;
+  health: number;
+  maxHealth: number;
+  stamina: number;
+  maxStamina: number;
   isPaused: boolean;
   currentDialogue: number;
   dialogueText: string;
-  location: string;
   playerPosition: {
     x: number;
     y: number;
@@ -22,10 +47,24 @@ const initialState: GameState = {
   playerSprite: 1,
   playerClass: '',
   playerPet: 'cat',
+  location: 'cave',
+  inventory: [],
+  time: {
+    hour: 23,
+    minute: 30
+  },
+  date: {
+    year: 1995,
+    month: 7,
+    day: 4
+  },
+  health: 100,
+  maxHealth: 100,
+  stamina: 100,
+  maxStamina: 100,
   isPaused: false,
   currentDialogue: -1,
   dialogueText: '',
-  location: 'cave',
   playerPosition: {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2
@@ -50,6 +89,38 @@ const gameSlice = createSlice({
     setPlayerPet: (state, action: PayloadAction<string>) => {
       state.playerPet = action.payload;
     },
+    setLocation: (state, action: PayloadAction<string>) => {
+      state.location = action.payload;
+    },
+    addInventoryItem: (state, action: PayloadAction<InventoryItem>) => {
+      const existingItem = state.inventory.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        existingItem.quantity += action.payload.quantity;
+      } else {
+        state.inventory.push(action.payload);
+      }
+    },
+    removeInventoryItem: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
+      const existingItem = state.inventory.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        existingItem.quantity -= action.payload.quantity;
+        if (existingItem.quantity <= 0) {
+          state.inventory = state.inventory.filter(item => item.id !== action.payload.id);
+        }
+      }
+    },
+    updateTime: (state, action: PayloadAction<GameTime>) => {
+      state.time = action.payload;
+    },
+    updateDate: (state, action: PayloadAction<GameDate>) => {
+      state.date = action.payload;
+    },
+    setHealth: (state, action: PayloadAction<number>) => {
+      state.health = Math.max(0, Math.min(state.maxHealth, action.payload));
+    },
+    setStamina: (state, action: PayloadAction<number>) => {
+      state.stamina = Math.max(0, Math.min(state.maxStamina, action.payload));
+    },
     setPaused: (state, action: PayloadAction<boolean>) => {
       state.isPaused = action.payload;
     },
@@ -58,9 +129,6 @@ const gameSlice = createSlice({
     },
     setDialogueText: (state, action: PayloadAction<string>) => {
       state.dialogueText = action.payload;
-    },
-    setLocation: (state, action: PayloadAction<string>) => {
-      state.location = action.payload;
     },
     setPlayerPosition: (state, action: PayloadAction<{ x: number; y: number }>) => {
       state.playerPosition = action.payload;
@@ -79,10 +147,16 @@ export const {
   setPlayerSprite,
   setPlayerClass,
   setPlayerPet,
+  setLocation,
+  addInventoryItem,
+  removeInventoryItem,
+  updateTime,
+  updateDate,
+  setHealth,
+  setStamina,
   setPaused,
   setCurrentDialogue,
   setDialogueText,
-  setLocation,
   setPlayerPosition,
   setPlayerDirection,
   setIsMoving
