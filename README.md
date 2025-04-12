@@ -16,9 +16,13 @@ A 2D RPG game built with React, Redux, and Electron.
 ### macOS
 1. Go to the [Releases](https://github.com/jarekjar/wanderoot/releases) page
 2. Find the latest version
-3. Download `Wanderoot-x.x.x.dmg` or `Wanderoot-x.x.x-mac.zip` (portable version)
-4. For DMG: Double-click to mount and drag to Applications
-5. For ZIP: Extract and run the app directly
+3. Download the appropriate version for your Mac:
+   - For Macs with Apple Silicon (2020 or later): Download `Wanderoot-x.x.x-arm64.dmg` for best performance
+   - For Intel-based Macs (pre-2020): Download `Wanderoot-x.x.x-x64.dmg`
+   - Not sure? Click Apple menu () > About This Mac. Look for "Chip" or "Processor"
+4. Double-click the downloaded .dmg file
+5. Drag Wanderoot to your Applications folder
+6. Launch from Applications
 
 ## ✨ Features
 
