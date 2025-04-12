@@ -6,7 +6,7 @@ A 2D RPG game built with React, Redux, and Electron.
 
 ## 📥 Download & Install
 
-1. Go to the [Releases](https://github.com/jaredkjar/wanderoot/releases) page
+1. Go to the [Releases](https://github.com/jarekjar/wanderoot/releases) page
 2. Find the latest version
 3. Download `Wanderoot-Setup-x.x.x.exe`
 4. Run the installer
@@ -34,7 +34,7 @@ A 2D RPG game built with React, Redux, and Electron.
 
 ```bash
 # Clone the repository
-git clone https://github.com/jaredkjar/wanderoot.git
+git clone https://github.com/jarekjar/wanderoot.git
 cd wanderoot
 
 # Install dependencies
@@ -80,9 +80,6 @@ wanderoot/
 
 MIT
 
-## 🙏 Special Thanks
-
-Special thanks to the Cursor Agent for assistance in development!
 
 ## 🎮 Current Development Status
 
@@ -187,4 +184,4 @@ We welcome contributions! Please:
 
 ## 🙏 Acknowledgments
 
-- [List any credits, inspirations, or resources used]
+- Special thanks to the Cursor Agent for assistance in development!
