@@ -4,7 +4,7 @@ A 2D RPG game built with React, Redux, and Electron.
 
 ![Wanderoot Main Menu](screenshots/main-menu.png)
 
-🎮 [Play Online](https://jarekjar.github.io/wanderoot/) | 📥 [Download Desktop Version](#-download--install)
+🎮 [Play Online](https://wanderoot.net) | 📥 [Download Desktop Version](#-download--install)
 
 ## 📥 Download & Install
 
