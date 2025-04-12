@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../state/store';
 import { useTheme } from '../theme/ThemeContext';
 import { playClickSound } from '../utils/audio';
 import { InGameMenu } from './InGameMenu';
 import { Settings } from './Settings';
+import { DialogueBox } from './DialogueBox';
+import { Alert } from './Alert';
+import { saveGame, loadGame } from '../utils/saveLoad';
+import { createNewSave } from '../types/saveGame';
+import { setPlayerName, setPlayerSprite, setPlayerClass } from '../state/gameSlice';
 
 interface GameProps {
   onBack: () => void;
@@ -18,6 +23,39 @@ export function Game({ onBack }: GameProps) {
   const playerClass = useSelector((state: RootState) => state.game.playerClass);
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [alert, setAlert] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  
+  // Dialogue state
+  const [currentDialogue, setCurrentDialogue] = useState(0);
+  const [dialogueText, setDialogueText] = useState('');
+  const dialogueLines = [
+    'You wake up in a mysterious cave...',
+    'With no items or memory of how you got here.'
+  ];
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Start first dialogue after a short delay
+    const timer = setTimeout(() => {
+      setDialogueText(dialogueLines[0]);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleNextDialogue = () => {
+    playClickSound(soundEnabled);
+    const nextDialogue = currentDialogue + 1;
+    
+    if (nextDialogue < dialogueLines.length) {
+      setCurrentDialogue(nextDialogue);
+      setDialogueText(dialogueLines[nextDialogue]);
+    } else {
+      setCurrentDialogue(0);
+      setDialogueText('');  // Clear dialogue when finished
+    }
+  };
 
   const handleOpenMenu = () => {
     playClickSound(soundEnabled);
@@ -43,15 +81,68 @@ export function Game({ onBack }: GameProps) {
   };
 
   const handleSave = () => {
-    // TODO: Implement save
+    try {
+      const saveData = createNewSave(
+        playerName,
+        playerSprite,
+        playerClass
+      );
+      
+      // Add current game progress
+      saveData.currentDialogue = currentDialogue;
+      
+      // Save to localStorage
+      saveGame(saveData);
+      
+      setAlert({ message: 'Game saved successfully!', type: 'success' });
+      playClickSound(soundEnabled);
+      setShowMenu(false);
+    } catch (error) {
+      console.error('Failed to save game:', error);
+      setAlert({ message: 'Failed to save game', type: 'error' });
+    }
   };
 
   const handleLoad = () => {
-    // TODO: Implement load
+    try {
+      const saveData = loadGame();
+      if (!saveData) {
+        console.warn('No save data found');
+        // TODO: Show message to user
+        return;
+      }
+      
+      // Load game state
+      dispatch(setPlayerName(saveData.playerName));
+      dispatch(setPlayerSprite(saveData.playerSprite));
+      dispatch(setPlayerClass(saveData.playerClass));
+      
+      // Set dialogue progress
+      setCurrentDialogue(saveData.currentDialogue);
+      if (saveData.currentDialogue < dialogueLines.length) {
+        setDialogueText(dialogueLines[saveData.currentDialogue]);
+      } else {
+        setDialogueText('');
+      }
+      
+      playClickSound(soundEnabled);
+      setShowMenu(false);
+    } catch (error) {
+      console.error('Failed to load game:', error);
+      // TODO: Show error message to user
+    }
   };
 
   return (
     <div className="relative z-10 flex flex-col items-center justify-start min-h-screen h-screen w-full p-2 bg-[#2A1810]">
+      {alert && (
+        <Alert
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
+
       {/* Game Header */}
       <div className="w-full max-w-[1200px] flex items-center justify-between mb-2 p-2 settings-row-bg rounded-lg">
         <div className="flex items-center gap-4">
@@ -118,29 +209,31 @@ export function Game({ onBack }: GameProps) {
         {/* Player Character */}
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <div 
-            className="w-[64px] h-[64px] rounded-lg border-2 flex items-center justify-center"
+            className="w-[196px] h-[196px] rounded-lg flex items-center justify-center"
             style={{
-              background: `${theme.secondary}80`,
-              borderColor: `${theme.border}80`
+              background: `${theme.secondary}40`,
+              borderColor: theme.border,
+              filter: 'drop-shadow(0 0 20px rgba(0,0,0,0.7))'
             }}
           >
             <img 
               src={`/assets/sprites/character${playerSprite}.svg`} 
               alt="Player"
-              className="w-full h-full"
+              className="w-[180px] h-[180px] pixelated"
+              style={{
+                imageRendering: 'pixelated'
+              }}
             />
           </div>
         </div>
 
-        {/* Welcome Message */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
-          <div className="text-sm font-['Press_Start_2P'] text-white/80 mb-2">
-            You wake up in a mysterious cave...
-          </div>
-          <div className="text-xs font-['Press_Start_2P'] text-white/50">
-            With no items or memory of how you got here.
-          </div>
-        </div>
+        {/* Dialogue Box */}
+        {dialogueText && (
+          <DialogueBox
+            text={dialogueText}
+            onNext={handleNextDialogue}
+          />
+        )}
       </div>
 
       {/* In-Game Menu */}

@@ -41,7 +41,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
       }}
     >
       <div 
-        className="relative z-10 flex flex-col items-center justify-center px-4"
+        className="relative z-10 flex flex-col items-center justify-center"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Title */}
@@ -58,7 +58,7 @@ export function InGameMenu({ onClose, onSettings, onSave, onLoad, onExit }: InGa
 
         {/* Menu Container */}
         <div 
-          className="p-4 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-full max-w-[500px] menu-slide-up"
+          className="p-6 rounded-lg border-4 shadow-[inset_0_0_10px_rgba(0,0,0,0.3)] w-full max-w-[800px] menu-slide-up"
           style={{
             borderColor: theme.border,
             background: `linear-gradient(180deg, ${theme.secondary} 0%, ${theme.secondary} 100%)`
