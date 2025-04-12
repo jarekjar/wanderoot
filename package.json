@@ -13,8 +13,7 @@
     "appId": "com.wanderoot.app",
     "productName": "Wanderoot",
     "directories": {
-      "output": "release",
-      "buildResources": "src/assets"
+      "output": "release"
     },
     "win": {
       "target": [
@@ -23,22 +22,21 @@
           "arch": ["x64"]
         }
       ],
-      "icon": "buildResources/icon.png",
-      "artifactName": "${productName}-Setup.${ext}"
+      "icon": "src/assets/icon.png"
     },
     "nsis": {
-      "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
-      "shortcutName": "Wanderoot"
+      "shortcutName": "Wanderoot",
+      "artifactName": "${productName}-Setup-${version}.${ext}",
+      "deleteAppDataOnUninstall": true,
     },
     "files": [
       "dist/**/*",
       "electron/**/*",
       "package.json"
-    ],
-    "asar": true
+    ]
   },
   "scripts": {
     "dev": "vite",
@@ -46,7 +44,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "electron-dev": "cross-env NODE_ENV=development concurrently \"npm run dev\" \"wait-on http://localhost:5173 && electron .\"",
-    "electron-pack": "cross-env NODE_ENV=production npm run build && electron-builder --win --config",
+    "electron-pack": "rimraf dist/ release/ && cross-env NODE_ENV=production npm run build && electron-builder --win --config",
     "release": "electron-builder --win --publish always",
     "convert-icon": "node scripts/convert-icon.js"
   },
