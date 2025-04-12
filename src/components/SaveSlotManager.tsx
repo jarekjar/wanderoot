@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTheme } from '../theme/ThemeContext';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
 import { playClickSound } from '../utils/audio';
-import { getAllSaveSlots, SaveGame } from '../utils/saveLoad';
+import { getAllSaveSlots } from '../utils/saveLoad';
+import { SaveGame } from '../types/saveGame';
 import '../styles/background.css';
 import '../styles/menu.css';
 

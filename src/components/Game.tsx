@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../state/store';
 import { useTheme } from '../theme/ThemeContext';
@@ -10,71 +10,91 @@ import { Alert } from './Alert';
 import { SaveSlotManager } from './SaveSlotManager';
 import { saveGame, loadGame } from '../utils/saveLoad';
 import { createNewSave } from '../types/saveGame';
-import { setPlayerName, setPlayerSprite, setPlayerClass, setLocation } from '../state/gameSlice';
+import { setPlayerName, setPlayerSprite, setPlayerClass, setPaused, setCurrentDialogue, setDialogueText } from '../state/gameSlice';
+import { useNavigate } from 'react-router-dom';
 
-interface GameProps {
-  onBack: () => void;
-}
-
-export function Game({ onBack }: GameProps) {
+export function Game() {
+  const navigate = useNavigate();
   const theme = useTheme();
+  const dispatch = useDispatch();
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
+  const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
   const playerName = useSelector((state: RootState) => state.game.playerName);
   const playerSprite = useSelector((state: RootState) => state.game.playerSprite);
   const playerClass = useSelector((state: RootState) => state.game.playerClass);
-  const location = useSelector((state: RootState) => state.game.location);
+  const isPaused = useSelector((state: RootState) => state.game.isPaused);
+  const currentDialogue = useSelector((state: RootState) => state.game.currentDialogue);
+  const dialogueText = useSelector((state: RootState) => state.game.dialogueText);
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showSaveSlots, setShowSaveSlots] = useState(false);
   const [saveSlotMode, setSaveSlotMode] = useState<'save' | 'load'>('save');
   const [alert, setAlert] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   
-  // Dialogue state
-  const [currentDialogue, setCurrentDialogue] = useState(0);
-  const [dialogueText, setDialogueText] = useState('');
   const dialogueLines = [
     'You wake up in a mysterious cave...',
     'With no items or memory of how you got here.'
   ];
 
-  const dispatch = useDispatch();
+  // Handle keyboard events
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (showSettings) {
+          handleCloseSettings();
+        } else if (showSaveSlots) {
+          handleSaveSlotsBack();
+        } else {
+          setShowMenu(!showMenu);
+          playClickSound(soundEnabled);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showMenu, showSettings, showSaveSlots, soundEnabled]);
+
+  // Update pause state when menu visibility changes
+  useEffect(() => {
+    dispatch(setPaused(showMenu || showSettings || showSaveSlots));
+  }, [showMenu, showSettings, showSaveSlots, dispatch]);
 
   useEffect(() => {
     // Start first dialogue after a short delay
     const timer = setTimeout(() => {
-      setDialogueText(dialogueLines[0]);
+      dispatch(setCurrentDialogue(0));
+      dispatch(setDialogueText(dialogueLines[0]));
     }, 500);
 
     // Set initial location and play appropriate music
-    dispatch(setLocation('cave'));
-    const musicVolume = soundEnabled ? 0.5 : 0;
     playBackgroundMusic(musicVolume, soundEnabled, 'cave');
     
     return () => {
       clearTimeout(timer);
       // Switch back to menu music when component unmounts
-      dispatch(setLocation('menu'));
       playBackgroundMusic(musicVolume, soundEnabled, 'menu');
     };
-  }, []);
+  }, []); // Only run on mount
+
+  // Handle music volume changes separately
+  useEffect(() => {
+    playBackgroundMusic(musicVolume, soundEnabled, 'cave');
+  }, [musicVolume, soundEnabled]);
 
   const handleNextDialogue = () => {
+    if (isPaused) return; // Don't advance dialogue if game is paused
+    
     playClickSound(soundEnabled);
     const nextDialogue = currentDialogue + 1;
     
     if (nextDialogue < dialogueLines.length) {
-      setCurrentDialogue(nextDialogue);
-      setDialogueText(dialogueLines[nextDialogue]);
+      dispatch(setCurrentDialogue(nextDialogue));
+      dispatch(setDialogueText(dialogueLines[nextDialogue]));
     } else {
-      setCurrentDialogue(0);
-      setDialogueText('');  // Clear dialogue when finished
+      dispatch(setCurrentDialogue(0));
+      dispatch(setDialogueText(''));  // Clear dialogue when finished
     }
-  };
-
-  const handleOpenMenu = () => {
-    playClickSound(soundEnabled);
-    setShowMenu(true);
-    setShowSettings(false);
   };
 
   const handleCloseMenu = () => {
@@ -117,7 +137,6 @@ export function Game({ onBack }: GameProps) {
         
         // Add current game progress
         saveData.currentDialogue = currentDialogue;
-        saveData.location = location;
         
         // Save to localStorage
         saveGame(saveData, slotId);
@@ -141,19 +160,17 @@ export function Game({ onBack }: GameProps) {
         dispatch(setPlayerName(saveData.playerName));
         dispatch(setPlayerSprite(saveData.playerSprite));
         dispatch(setPlayerClass(saveData.playerClass));
-        dispatch(setLocation(saveData.location));
         
         // Set dialogue progress
-        setCurrentDialogue(saveData.currentDialogue);
+        dispatch(setCurrentDialogue(saveData.currentDialogue));
         if (saveData.currentDialogue < dialogueLines.length) {
-          setDialogueText(dialogueLines[saveData.currentDialogue]);
+          dispatch(setDialogueText(dialogueLines[saveData.currentDialogue]));
         } else {
-          setDialogueText('');
+          dispatch(setDialogueText(''));
         }
         
         // Play appropriate music based on location
-        const musicVolume = soundEnabled ? 0.5 : 0;
-        playBackgroundMusic(musicVolume, soundEnabled, saveData.location);
+        playBackgroundMusic(musicVolume, soundEnabled, 'cave');
         
         setAlert({ message: 'Game loaded successfully!', type: 'success' });
         playClickSound(soundEnabled);
@@ -170,6 +187,16 @@ export function Game({ onBack }: GameProps) {
     setShowMenu(true);
   };
 
+  const handleOpenMenu = () => {
+    playClickSound(soundEnabled);
+    setShowMenu(true);
+  };
+
+  const handleExitGame = () => {
+    playClickSound(soundEnabled);
+    navigate('/');
+  };
+
   return (
     <div className="relative z-10 flex flex-col items-center justify-start min-h-screen h-screen w-full p-2 bg-[#2A1810]">
       {alert && (
@@ -181,24 +208,18 @@ export function Game({ onBack }: GameProps) {
       )}
 
       {/* Game Header */}
-      <div className="w-full max-w-[1200px] flex items-center justify-between mb-2 p-2 settings-row-bg rounded-lg">
+      <div className="w-full max-w-[1200px] flex items-center justify-between mb-8 p-4 settings-row-bg rounded-lg">
         <div className="flex items-center gap-4">
           <button
             onClick={handleOpenMenu}
-            className="text-white hover:opacity-80 transition-opacity"
+            className="text-white hover:opacity-80 transition-opacity px-4 py-2 rounded-lg bg-[#8B4513] hover:bg-[#A0522D]"
           >
             Menu
           </button>
-          <div 
-            className="w-[48px] h-[48px] rounded-lg border-2 flex items-center justify-center"
-            style={{
-              background: theme.secondary,
-              borderColor: theme.border
-            }}
-          >
+          <div className="w-[48px] h-[48px] bg-[#2A1810] rounded-lg border-2 border-[#8B4513] flex items-center justify-center">
             <img 
               src={`/assets/sprites/character${playerSprite}.svg`} 
-              alt="Player"
+              alt="Player" 
               className="w-full h-full"
             />
           </div>
@@ -273,27 +294,26 @@ export function Game({ onBack }: GameProps) {
         )}
       </div>
 
-      {/* In-Game Menu */}
+      {/* Menus */}
       {showMenu && (
         <InGameMenu
           onClose={handleCloseMenu}
           onSettings={handleSettings}
           onSave={handleSave}
           onLoad={handleLoad}
-          onExit={onBack}
+          onExit={handleExitGame}
         />
       )}
 
-      {/* Settings Panel */}
       {showSettings && (
         <Settings onBack={handleCloseSettings} />
       )}
 
       {showSaveSlots && (
         <SaveSlotManager
-          onBack={handleSaveSlotsBack}
-          onSelectSlot={handleSaveSlotSelect}
           mode={saveSlotMode}
+          onSelectSlot={handleSaveSlotSelect}
+          onBack={handleSaveSlotsBack}
           title={saveSlotMode === 'save' ? 'Save Game' : 'Load Game'}
         />
       )}

@@ -1,42 +1,31 @@
 import { useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
-import { advanceTime } from '../state/gameState';
 
-const TICK_RATE = 60; // 60 FPS
-const GAME_MINUTE_PER_REAL_SECOND = 1; // 1 game minute per real second
-
-export const useGameLoop = () => {
-  const dispatch = useDispatch();
-  const isPaused = useSelector((state: RootState) => state.ui.isPaused);
-  const lastTickRef = useRef<number>(0);
+export const useGameLoop = (callback: () => void) => {
+  const isPaused = useSelector((state: RootState) => state.game.isPaused);
+  const frameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    let animationFrameId: number;
-    let lastTime = performance.now();
-
-    const gameLoop = (currentTime: number) => {
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
-
+    let lastTime = 0;
+    
+    const animate = (currentTime: number) => {
+      if (!lastTime) lastTime = currentTime;
+      
       if (!isPaused) {
-        // Advance game time
-        const gameMinutesToAdvance = (deltaTime / 1000) * GAME_MINUTE_PER_REAL_SECOND;
-        dispatch(advanceTime(Math.floor(gameMinutesToAdvance)));
-
-        // Update game state
-        // TODO: Add NPC movement, crop growth, etc.
+        callback();
       }
-
-      animationFrameId = requestAnimationFrame(gameLoop);
+      
+      lastTime = currentTime;
+      frameRef.current = requestAnimationFrame(animate);
     };
 
-    animationFrameId = requestAnimationFrame(gameLoop);
+    frameRef.current = requestAnimationFrame(animate);
 
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (frameRef.current) {
+        cancelAnimationFrame(frameRef.current);
+      }
     };
-  }, [dispatch, isPaused]);
-
-  return null;
+  }, [callback, isPaused]);
 }; 

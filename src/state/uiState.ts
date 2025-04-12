@@ -7,13 +7,15 @@ interface UIState {
   soundEnabled: boolean;
   volume: number;
   screenMode: 'windowed' | 'fullscreen';
+  menuOpen: boolean;
 }
 
 const initialState: UIState = {
   activeMenu: 'main',
   soundEnabled: true,
   volume: 0.5,
-  screenMode: 'windowed'
+  screenMode: 'windowed',
+  menuOpen: false
 };
 
 const uiSlice = createSlice({
@@ -31,9 +33,12 @@ const uiSlice = createSlice({
     },
     setScreenMode: (state, action: PayloadAction<'windowed' | 'fullscreen'>) => {
       state.screenMode = action.payload;
+    },
+    setMenuOpen: (state, action: PayloadAction<boolean>) => {
+      state.menuOpen = action.payload;
     }
   }
 });
 
-export const { setActiveMenu, toggleSound, setVolume, setScreenMode } = uiSlice.actions;
+export const { setActiveMenu, toggleSound, setVolume, setScreenMode, setMenuOpen } = uiSlice.actions;
 export default uiSlice.reducer; 

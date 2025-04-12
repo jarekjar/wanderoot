@@ -1,5 +1,5 @@
 .main-menu-bg {
-  background-image: url('/assets/village-background.png');
+  background-image: url('../../public/assets/village-background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

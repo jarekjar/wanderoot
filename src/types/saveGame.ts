@@ -1,19 +1,18 @@
-import { GameState } from '../state/gameSlice';
+import { version } from '../../package.json';
 
 export const CURRENT_SAVE_VERSION = '0.1.0';
 
-export interface SaveGame extends GameState {
-  // Player info
+export interface SaveGame {
+  version: string;
   playerName: string;
   playerSprite: number;
   playerClass: string;
-  
-  // Game progress
+  playerPet: string;
+  location: 'cave';
   currentDialogue: number;
-  
-  // Game state
+  dialogueText: string;
+  isPaused: boolean;
   lastSaveDate: string;
-  version: string;
   
   // TODO: Add more state as needed:
   // inventory: InventoryItem[];
@@ -25,15 +24,19 @@ export interface SaveGame extends GameState {
 export const createNewSave = (
   playerName: string,
   playerSprite: number,
-  playerClass: string
+  playerClass: string,
+  playerPet: string = 'cat'
 ): SaveGame => {
   return {
-    version: CURRENT_SAVE_VERSION,
+    version,
     playerName,
     playerSprite,
     playerClass,
+    playerPet,
     location: 'cave',
     currentDialogue: 0,
+    dialogueText: '',
+    isPaused: false,
     lastSaveDate: new Date().toISOString()
   };
 }; 

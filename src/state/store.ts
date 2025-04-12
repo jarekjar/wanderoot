@@ -1,17 +1,21 @@
 import { configureStore } from '@reduxjs/toolkit';
-import gameReducer from './gameState';
-import uiReducer from './uiState';
 import settingsReducer from './settingsState';
-import saveReducer from './saveState';
+import gameReducer from './gameSlice';
+import { GameState } from './gameSlice';
+
+export interface RootState {
+  settings: {
+    soundEnabled: boolean;
+    musicVolume: number;
+    screenMode: 'fullscreen' | 'windowed';
+    uiTheme: string;
+  };
+  game: GameState;
+}
 
 export const store = configureStore({
   reducer: {
-    game: gameReducer,
-    ui: uiReducer,
     settings: settingsReducer,
-    save: saveReducer
-  },
-});
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch; 
+    game: gameReducer
+  }
+}); 

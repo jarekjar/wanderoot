@@ -1,4 +1,3 @@
-import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPlayerName, setPlayerSprite, setPlayerClass, setPlayerPet } from '../state/gameState';
 import { RootState } from '../state/store';

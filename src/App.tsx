@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './state/store';
 import MainMenu from './components/MainMenu';
@@ -8,23 +8,39 @@ import { CharacterCreator } from './components/CharacterCreator';
 import { SaveSlotManager } from './components/SaveSlotManager';
 import { VolumeButton } from './components/VolumeButton';
 import { ThemeProvider, useTheme } from './theme/ThemeContext';
-import { playBackgroundMusic } from './utils/audio';
+import { playBackgroundMusic, updateMusicVolume } from './utils/audio';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from './state/store';
 import { loadGame } from './utils/saveLoad';
-import { setPlayerName, setPlayerSprite, setPlayerClass } from './state/gameSlice';
+import { setPlayerName, setPlayerSprite, setPlayerClass } from './state/gameState';
 import './styles/background.css';
 import './styles/menu.css';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+
+// Redirect component to handle initial navigation
+function InitialRedirect() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(location.pathname);
+    if (location.pathname === '/') {
+      return;
+    }
+    navigate('/', { replace: true });
+  }, []);
+
+  return null;
+}
 
 function AppContent() {
-  const [currentScreen, setCurrentScreen] = useState<'menu' | 'settings' | 'game' | 'character' | 'saveSlot'>('menu');
+  const navigate = useNavigate();
   const theme = useTheme();
-  const dispatch = useDispatch();
   const musicVolume = useSelector((state: RootState) => state.settings.musicVolume);
   const soundEnabled = useSelector((state: RootState) => state.settings.soundEnabled);
   const [hasInteracted, setHasInteracted] = useState(false);
-  const navigate = useNavigate();
+  const [musicStarted, setMusicStarted] = useState(false);
+  const dispatch = useDispatch();
 
   // Start music after user interaction
   useEffect(() => {
@@ -36,31 +52,50 @@ function AppContent() {
     return () => document.removeEventListener('click', handleFirstInteraction);
   }, []);
 
-  // Play music once user has interacted
+  // Initialize music once after first interaction
   useEffect(() => {
-    if (hasInteracted) {
+    if (hasInteracted && !musicStarted && soundEnabled) {
       playBackgroundMusic(musicVolume, soundEnabled);
+      setMusicStarted(true);
     }
-  }, [hasInteracted, musicVolume, soundEnabled]);
+  }, [hasInteracted, musicStarted, soundEnabled]);
+
+  // Handle volume changes
+  useEffect(() => {
+    if (musicStarted) {
+      updateMusicVolume(musicVolume);
+    }
+  }, [musicVolume, musicStarted]);
+
+  // Handle sound enabled/disabled
+  useEffect(() => {
+    if (musicStarted) {
+      if (soundEnabled) {
+        playBackgroundMusic(musicVolume, soundEnabled);
+      } else {
+        updateMusicVolume(0);
+      }
+    }
+  }, [soundEnabled, musicStarted]);
 
   const handleNewGame = () => {
-    setCurrentScreen('character');
+    navigate('/character');
   };
 
   const handleLoadGame = () => {
-    setCurrentScreen('saveSlot');
+    navigate('/load');
   };
 
   const handleCreateCharacter = () => {
-    setCurrentScreen('game');
+    navigate('/game');
   };
 
   const handleOpenSettings = () => {
-    setCurrentScreen('settings');
+    navigate('/settings');
   };
 
   const handleBackToMenu = () => {
-    setCurrentScreen('menu');
+    navigate('/');
   };
 
   const handleLoadSlotSelect = (slotId: number) => {
@@ -77,7 +112,7 @@ function AppContent() {
       dispatch(setPlayerClass(saveData.playerClass));
       
       // Switch to game screen
-      setCurrentScreen('game');
+      navigate('/game');
     } catch (error) {
       console.error('Failed to load game:', error);
     }
@@ -85,33 +120,46 @@ function AppContent() {
 
   return (
     <>
+      <InitialRedirect />
       <div className="main-menu-bg" />
       <div className="min-h-screen flex items-center justify-center relative">
-        {currentScreen !== 'game' && <VolumeButton />}
-        {currentScreen === 'menu' && (
-          <MainMenu 
-            onNewGame={handleNewGame} 
-            onLoadGame={handleLoadGame}
-            onSettings={handleOpenSettings} 
-          />
-        )}
-        {currentScreen === 'character' && (
-          <CharacterCreator onBack={handleBackToMenu} onCreateCharacter={handleCreateCharacter} />
-        )}
-        {currentScreen === 'saveSlot' && (
-          <SaveSlotManager 
-            onBack={handleBackToMenu}
-            onSelectSlot={handleLoadSlotSelect}
-            mode="load"
-            title="Load Game"
-          />
-        )}
-        {currentScreen === 'settings' && (
-          <Settings onBack={handleBackToMenu} />
-        )}
-        {currentScreen === 'game' && (
-          <Game onBack={handleBackToMenu} />
-        )}
+        <Routes>
+          <Route path="/" element={
+            <>
+              <VolumeButton />
+              <MainMenu 
+                onNewGame={handleNewGame} 
+                onLoadGame={handleLoadGame}
+                onSettings={handleOpenSettings} 
+              />
+            </>
+          } />
+          <Route path="/character" element={
+            <>
+              <VolumeButton />
+              <CharacterCreator onBack={handleBackToMenu} onCreateCharacter={handleCreateCharacter} />
+            </>
+          } />
+          <Route path="/load" element={
+            <>
+              <VolumeButton />
+              <SaveSlotManager 
+                onBack={handleBackToMenu}
+                onSelectSlot={handleLoadSlotSelect}
+                mode="load"
+                title="Load Game"
+              />
+            </>
+          } />
+          <Route path="/settings" element={
+            <>
+              <VolumeButton />
+              <Settings onBack={handleBackToMenu} />
+            </>
+          } />
+          <Route path="/game" element={<Game />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
         
         {/* Version number - persistent across all screens */}
         <div 
@@ -127,29 +175,14 @@ function AppContent() {
   );
 }
 
-function App() {
+export default function App() {
   return (
     <Provider store={store}>
-      <ThemeProvider>
-        <Router>
-          <Routes>
-            <Route path="/" element={<AppContent />} />
-            <Route path="/settings" element={
-              <Settings onBack={() => window.history.back()} />
-            } />
-            <Route path="/character-creator" element={
-              <CharacterCreator 
-                onBack={() => window.history.back()}
-                onCreateCharacter={() => {
-                  window.history.back();
-                }}
-              />
-            } />
-          </Routes>
-        </Router>
-      </ThemeProvider>
+      <HashRouter>
+        <ThemeProvider>
+          <AppContent />
+        </ThemeProvider>
+      </HashRouter>
     </Provider>
   );
-}
-
-export default App; 
+} 

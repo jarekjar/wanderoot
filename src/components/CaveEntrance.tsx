@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTheme } from '../theme/ThemeContext';
 import { useSelector } from 'react-redux';
 import { RootState } from '../state/store';
