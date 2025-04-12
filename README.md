@@ -1,76 +1,114 @@
-# Wanderoot Documentation
+# Wanderoot
 
-Wanderoot is a Stardew Valley-inspired farming game built with React and TypeScript. This documentation covers the technical implementation, game design, and development progress.
+A charming pixel-art farming and exploration game built with React, Electron, and PixiJS.
 
-## Table of Contents
+## 🎮 Current Development Status
 
-- [Game Design](./docs/design/game-design.md)
-- [Technical Architecture](./docs/technical/architecture.md)
-- [Development Progress](./docs/progress/development-log.md)
-- [Component Documentation](./docs/components/README.md)
+Wanderoot is currently in early development (v0.1.0). Key features implemented:
+- Basic game menu and settings interface
+- Sound system with background music and effects
+- Pause functionality
+- Dialogue system
+- Basic UI theming
 
-## Quick Start
+## 🚀 Getting Started
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Start development server: `npm run dev`
-4. Open `http://localhost:5173` in your browser
+### Prerequisites
+- Node.js 20.x or higher
+- npm 10.x or higher
+- Git
 
-## Project Structure
+### Installation
 
-```
-src/
-├── components/     # React components
-├── state/         # Redux state management
-├── theme/         # Theme configuration
-├── utils/         # Utility functions
-└── types/         # TypeScript type definitions
-
-docs/
-├── design/        # Game design documents
-├── technical/     # Technical documentation
-├── progress/      # Development progress logs
-└── components/    # Component documentation
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/wanderoot.git
+cd wanderoot
 ```
 
-## Tech Stack
+2. Install dependencies:
+```bash
+npm install
+```
 
-- React 18
-- TypeScript
-- Redux Toolkit
-- Tailwind CSS
-- Vite
+### Development
 
-## Development Status
+Run the development version with hot reload:
+```bash
+npm run electron-dev
+```
 
-Wanderoot is currently in early development. The following features are implemented:
+This will:
+- Start the Vite development server
+- Launch the Electron application
+- Enable hot reload for both frontend and Electron processes
 
-- ✅ Main menu with pixel art styling
-- ✅ Save slot system
-- ✅ Basic game state management
-- ✅ Character creation interface
-- ✅ Game loop foundation
-- ✅ Input handling system
+### Building
 
-### In Progress
+Create a production build:
+```bash
+npm run electron-pack
+```
 
-- 🚧 Farm world rendering
-- 🚧 Player movement system
-- 🚧 Time and weather system
-- 🚧 Inventory management
+This generates:
+- A portable Windows executable in the `release` directory
+- Named format: `Wanderoot-win32-x64-portable.exe`
 
-### Planned Features
+## 🏗️ Project Structure
 
-- 📅 Crop planting and harvesting
-- 📅 Tool system
-- 📅 NPC interactions
-- 📅 Multiplayer support
-- 📅 Achievement system
+```
+wanderoot/
+├── electron/          # Electron main process files
+├── public/           
+│   └── assets/       # Game assets (audio, images)
+├── src/
+│   ├── components/   # React components
+│   ├── state/        # Redux store and slices
+│   └── utils/        # Utility functions
+└── dist/             # Production build output
+```
 
-## Contributing
+## 🔧 Technical Stack
 
-We welcome contributions! Please see our [Contributing Guidelines](./docs/CONTRIBUTING.md) for details on how to get started.
+- **Frontend**: React 19, TypeScript
+- **State Management**: Redux Toolkit
+- **Game Engine**: PixiJS 8
+- **Build Tools**: Vite, Electron Builder
+- **Audio**: Howler.js
+- **Styling**: Tailwind CSS
 
-## License
+## 🎵 Audio System
 
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+The game features a dynamic audio system with:
+- Background music that responds to game state
+- Sound effects for UI interactions
+- Volume control
+- Automatic pause handling
+
+## 🚀 Release Process
+
+1. Update version in `package.json`
+2. Create and push a new tag:
+```bash
+git tag v[version]
+git push origin main --tags
+```
+3. GitHub Actions will automatically:
+   - Build the application
+   - Create a GitHub release
+   - Attach the portable executable
+
+## 🤝 Contributing
+
+We welcome contributions! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Submit a Pull Request
+
+## 📝 License
+
+[Your chosen license]
+
+## 🙏 Acknowledgments
+
+- [List any credits, inspirations, or resources used]

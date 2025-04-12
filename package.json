@@ -12,7 +12,8 @@
     "appId": "com.wanderoot.app",
     "productName": "Wanderoot",
     "directories": {
-      "output": "release"
+      "output": "release",
+      "buildResources": "public"
     },
     "win": {
       "target": [

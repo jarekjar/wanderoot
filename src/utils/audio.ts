@@ -16,7 +16,9 @@ export const getCurrentTrack = () => currentTrack;
 
 export const playClickSound = (soundEnabled: boolean) => {
   if (soundEnabled) {
-    const audio = new Audio(getAssetPath('/assets/audio/fx/button-click-sound-effect.mp3'));
+    const audioPath = getAssetPath('/assets/audio/fx/button-click-sound-effect.mp3');
+    console.log('Loading click sound from:', audioPath);
+    const audio = new Audio(audioPath);
     audio.volume = 0.25;
     audio.play().catch(error => {
       console.error('Error playing click sound:', error);
@@ -25,11 +27,11 @@ export const playClickSound = (soundEnabled: boolean) => {
 };
 
 export const playBackgroundMusic = (musicVolume: number, soundEnabled: boolean, track: 'menu' | 'cave' | 'forest' | 'town' = 'menu') => {
-  const trackPath = {
-    menu: getAssetPath('/assets/audio/morning-garden-acoustic-chill.mp3'),
+  const trackPaths = {
+    menu: getAssetPath('/assets/audio/music/morning-garden-acoustic-chill.mp3'),
     cave: getAssetPath('/assets/audio/music/cave_ambience.wav'),
     forest: getAssetPath('/assets/audio/music/cave_ambience.wav'), // Using cave ambience for forest for now
-    town: getAssetPath('/assets/audio/morning-garden-acoustic-chill.mp3') // Using menu music for town for now
+    town: getAssetPath('/assets/audio/music/morning-garden-acoustic-chill.mp3') // Using menu music for town for now
   };
 
   // First, ensure any existing music is stopped
@@ -42,7 +44,8 @@ export const playBackgroundMusic = (musicVolume: number, soundEnabled: boolean, 
 
   // Start new track
   currentTrack = track;
-  backgroundMusic = new Audio(trackPath[track]);
+  console.log('Loading background music from:', trackPaths[track]);
+  backgroundMusic = new Audio(trackPaths[track]);
   backgroundMusic.loop = true;
   backgroundMusic.volume = musicVolume;
   
