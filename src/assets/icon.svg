@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" version="1.1" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" fill="#2A1810"/>
+  <!-- Pixelated W -->
+  <g fill="#8B4513">
+    <!-- Left stem -->
+    <rect x="32" y="48" width="32" height="160"/>
+    <!-- Middle stem -->
+    <rect x="112" y="128" width="32" height="80"/>
+    <!-- Right stem -->
+    <rect x="192" y="48" width="32" height="160"/>
+    <!-- Left diagonal -->
+    <rect x="64" y="128" width="48" height="32"/>
+    <!-- Right diagonal -->
+    <rect x="144" y="128" width="48" height="32"/>
+  </g>
+</svg> 

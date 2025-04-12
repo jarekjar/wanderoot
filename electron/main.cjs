@@ -34,7 +34,8 @@ function createWindow() {
       nodeIntegration: false,
       webSecurity: isDev ? false : true,
       sandbox: false
-    }
+    },
+    icon: path.join(__dirname, '../src/assets/icon.png')
   });
 
   // Load the app
