@@ -12,8 +12,7 @@
     "appId": "com.wanderoot.app",
     "productName": "Wanderoot",
     "directories": {
-      "output": "release",
-      "buildResources": "public"
+      "output": "release"
     },
     "win": {
       "target": [
@@ -27,14 +26,8 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json"
-    ],
-    "extraResources": [
-      {
-        "from": "public/assets",
-        "to": "assets",
-        "filter": ["**/*"]
-      }
+      "package.json",
+      "public/assets/**/*"
     ],
     "asar": true,
     "asarUnpack": [

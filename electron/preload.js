@@ -15,10 +15,13 @@ contextBridge.exposeInMainWorld(
         return path.join(process.cwd(), 'public', cleanPath);
       }
       
-      // In production, assets are in the resources directory
-      const prodPath = path.join(process.resourcesPath, cleanPath);
-      console.log('Attempting to load asset from:', prodPath);
-      return prodPath;
+      // In production, audio files are unpacked (due to asar limitations)
+      if (cleanPath.includes('.mp3') || cleanPath.includes('.wav')) {
+        return path.join(process.resourcesPath, cleanPath);
+      }
+      
+      // Other assets are in the asar archive
+      return path.join(process.resourcesPath, 'assets', cleanPath.replace('assets/', ''));
     }
   }
 ); 
