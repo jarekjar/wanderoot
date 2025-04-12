@@ -19,20 +19,6 @@ function MainMenu({ onNewGame, onLoadGame, onSettings }: MainMenuProps) {
 
   return (
     <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-      {/* Volume button */}
-      <div className="absolute top-1/2 -translate-y-1/2 right-4">
-        <button
-          onClick={() => {
-            playClickSound(soundEnabled);
-            dispatch(setSoundEnabled(!soundEnabled));
-          }}
-          className="text-xl sm:text-2xl cursor-pointer hover:opacity-80 transition-opacity"
-        >
-          <span className="text-white/70 brightness-[1.2] contrast-[1.1]">
-            {soundEnabled ? '🔊' : '🔇'}
-          </span>
-        </button>
-      </div>
 
       <div className="mb-8 sm:mb-12">
         <h1 

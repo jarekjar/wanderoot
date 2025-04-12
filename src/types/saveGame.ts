@@ -1,6 +1,6 @@
-import { version } from '../../package.json';
+import { getVersion } from '../utils/version';
 
-export const CURRENT_SAVE_VERSION = '0.1.0';
+export const CURRENT_SAVE_VERSION = getVersion();
 
 export interface SaveGame {
   version: string;

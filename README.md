@@ -1,6 +1,82 @@
 # Wanderoot
 
-A charming pixel-art farming and exploration game built with React, Electron, and PixiJS.
+A 2D RPG game built with React, Redux, and Electron.
+
+## 📥 Download & Install
+
+1. Go to the [Releases](https://github.com/YOUR_USERNAME/wanderoot/releases) page
+2. Find the latest version
+3. Download `Wanderoot-Setup-x.x.x.exe`
+4. Run the installer
+5. Launch Wanderoot from your Start Menu or Desktop shortcut
+
+## ✨ Features
+
+- Character creation with multiple classes (Knight, Ranger, Mage)
+- Dynamic dialogue system with text animations
+- Save/Load game functionality with multiple save slots
+- In-game menu system with settings
+- Configurable audio settings (music volume, sound effects)
+- Pause functionality
+- Beautiful pixel art graphics
+- Original soundtrack
+
+## 🚀 Development
+
+### Prerequisites
+
+- Node.js (v20 or higher)
+- npm (included with Node.js)
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/wanderoot.git
+cd wanderoot
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run electron-dev
+```
+
+### Building
+
+```bash
+# Create Windows installer
+npm run electron-pack
+```
+
+### Project Structure
+
+```
+wanderoot/
+├── src/               # Source code
+│   ├── assets/       # Game assets (sprites, audio)
+│   ├── components/   # React components
+│   ├── state/        # Redux store and slices
+│   ├── styles/       # CSS styles
+│   ├── theme/        # Theme configuration
+│   ├── types/        # TypeScript type definitions
+│   └── utils/        # Utility functions
+├── electron/         # Electron main process
+└── public/          # Static assets
+```
+
+## 🛠️ Built With
+
+- React - UI framework
+- Redux - State management
+- Electron - Desktop application framework
+- TypeScript - Type safety
+- Tailwind CSS - Styling
+- Vite - Build tool
+
+## 📝 License
+
+MIT
 
 ## 🎮 Current Development Status
 
@@ -59,8 +135,6 @@ This generates:
 ```
 wanderoot/
 ├── electron/          # Electron main process files
-├── public/           
-│   └── assets/       # Game assets (audio, images)
 ├── src/
 │   ├── components/   # React components
 │   ├── state/        # Redux store and slices
@@ -104,10 +178,6 @@ We welcome contributions! Please:
 1. Fork the repository
 2. Create a feature branch
 3. Submit a Pull Request
-
-## 📝 License
-
-[Your chosen license]
 
 ## 🙏 Acknowledgments
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../state/store';
 import { useTheme } from '../theme/ThemeContext';
-import { playClickSound, playBackgroundMusic } from '../utils/audio';
+import { playClickSound, playBackgroundMusic, updateMusicVolume } from '../utils/audio';
 import { InGameMenu } from './InGameMenu';
 import { Settings } from './Settings';
 import { DialogueBox } from './DialogueBox';
@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import KnightSprite from '../assets/sprites/character1.svg';
 import RangerSprite from '../assets/sprites/character2.svg';
 import MageSprite from '../assets/sprites/character3.svg';
+import { getVersionWithV } from '../utils/version';
 
 const CHARACTER_SPRITES = [
   { id: 1, sprite: KnightSprite },
@@ -86,9 +87,13 @@ export function Game() {
     };
   }, []); // Only run on mount
 
-  // Handle music volume changes separately
+  // Handle music volume changes
   useEffect(() => {
-    playBackgroundMusic(musicVolume, soundEnabled, 'cave');
+    if (soundEnabled) {
+      updateMusicVolume(musicVolume);
+    } else {
+      updateMusicVolume(0);
+    }
   }, [musicVolume, soundEnabled]);
 
   const handleNextDialogue = () => {
@@ -334,7 +339,7 @@ export function Game() {
           textShadow: `2px 2px 0px ${theme.primary}, 2px 2px 4px rgba(0, 0, 0, 0.8)`
         }}
       >
-        v0.1.0
+        {getVersionWithV()}
       </div>
     </div>
   );
