@@ -1,6 +1,6 @@
 {
   "name": "wanderoot",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "private": true,
   "type": "module",
   "author": {
@@ -8,7 +8,7 @@
   },
   "description": "A Wanderoot Game",
   "main": "electron/main.cjs",
-  "homepage": "wanderoot.net",
+  "homepage": "./",
   "build": {
     "appId": "com.wanderoot.app",
     "productName": "Wanderoot",
